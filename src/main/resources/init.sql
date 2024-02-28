@@ -1,7 +1,10 @@
-DROP SCHEMA mydb CASCADE;
-CREATE SCHEMA IF NOT EXISTS mydb AUTHORIZATION admin;
+--Создаем схему, удаляя прежнюю, если такая существует
+DROP SCHEMA IF EXISTS school CASCADE;
+CREATE SCHEMA IF NOT EXISTS school AUTHORIZATION admin;
 
-CREATE TABLE IF NOT EXISTS mydb.courses
+
+--Создаем таблицу курсов
+CREATE TABLE IF NOT EXISTS school.courses
 (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     course_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
@@ -10,12 +13,12 @@ CREATE TABLE IF NOT EXISTS mydb.courses
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS mydb.courses
+ALTER TABLE IF EXISTS school.courses
     OWNER to admin;
 
 
-
-CREATE TABLE IF NOT EXISTS mydb.teachers
+--Создаем таблицу со учителями
+CREATE TABLE IF NOT EXISTS school.teachers
 (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     teacher_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
@@ -24,41 +27,43 @@ CREATE TABLE IF NOT EXISTS mydb.teachers
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS mydb.teachers
+ALTER TABLE IF EXISTS school.teachers
     OWNER to admin;
 
 
-CREATE TABLE IF NOT EXISTS mydb.students
+--Создаем таблицу со студентами
+CREATE TABLE IF NOT EXISTS school.students
 (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     student_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    course_id bigint,
+    course_id bigint NOT NULL,
     CONSTRAINT students_pkey PRIMARY KEY (id),
     CONSTRAINT courses_fkey FOREIGN KEY (course_id)
-        REFERENCES mydb.courses (id) MATCH SIMPLE
+        REFERENCES school.courses (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS mydb.students
+ALTER TABLE IF EXISTS school.students
     OWNER to admin;
 
 
-CREATE TABLE IF NOT EXISTS mydb.courses_teachers
+--Создаем связывающую таблицу для курсов и учителей(связь многие ко многим)
+CREATE TABLE IF NOT EXISTS school.courses_teachers
 (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     course_id bigint NOT NULL,
     teacher_id bigint NOT NULL,
     CONSTRAINT teachers_courses_pkey PRIMARY KEY (id),
     CONSTRAINT course_fkey FOREIGN KEY (course_id)
-        REFERENCES mydb.courses (id) MATCH SIMPLE
+        REFERENCES school.courses (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
     CONSTRAINT teacher_fkey FOREIGN KEY (teacher_id)
-        REFERENCES mydb.teachers (id) MATCH SIMPLE
+        REFERENCES school.teachers (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -66,32 +71,33 @@ CREATE TABLE IF NOT EXISTS mydb.courses_teachers
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS mydb.courses_teachers
+ALTER TABLE IF EXISTS school.courses_teachers
     OWNER to admin;
 
-ALTER TABLE IF EXISTS mydb.teachers_courses
+ALTER TABLE IF EXISTS school.teachers_courses
     OWNER to admin;
 
 
-INSERT INTO mydb.courses (course_name) VALUES ('Java');
-INSERT INTO mydb.courses (course_name) VALUES ('Python');
-INSERT INTO mydb.courses (course_name) VALUES ('JavaScript');
-INSERT INTO mydb.courses (course_name) VALUES ('PHP');
-INSERT INTO mydb.courses (course_name) VALUES ('SQL');
+--Заполняем таблицы начальными данными.
+INSERT INTO school.courses (course_name) VALUES ('Java');
+INSERT INTO school.courses (course_name) VALUES ('Python');
+INSERT INTO school.courses (course_name) VALUES ('JavaScript');
+INSERT INTO school.courses (course_name) VALUES ('PHP');
+INSERT INTO school.courses (course_name) VALUES ('SQL');
 
-INSERT INTO mydb.teachers (teacher_name) VALUES ('Демидов Дмитрий');
-INSERT INTO mydb.teachers (teacher_name) VALUES ('Чайкина Ольга');
-INSERT INTO mydb.teachers (teacher_name) VALUES ('Дудин Виктор');
+INSERT INTO school.teachers (teacher_name) VALUES ('Демидов Дмитрий');
+INSERT INTO school.teachers (teacher_name) VALUES ('Чайкина Ольга');
+INSERT INTO school.teachers (teacher_name) VALUES ('Дудин Виктор');
 
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('2', '1');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('4', '1');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('3', '2');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('5', '2');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('1', '3');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('2', '3');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('3', '3');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('4', '3');
-INSERT INTO mydb.courses_teachers (course_id, teacher_id) VALUES ('5', '3');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('2', '1');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('4', '1');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('3', '2');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('5', '2');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('1', '3');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('2', '3');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('3', '3');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('4', '3');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('5', '3');
 
-INSERT INTO mydb.students (student_name, course_id) VALUES ('Alexey', '1');
-INSERT INTO mydb.students (student_name, course_id) VALUES ('Maxim', '2');
+INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Efremychev', '1');
+INSERT INTO school.students (student_name, course_id) VALUES ('Maxim Efremychev', '2');

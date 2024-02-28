@@ -1,4 +1,4 @@
-package org.example;
+package org.example.jdbc;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DBUtils {
+public class DBConnection {
 
     public static Connection getConnection() {
         String dBURL = null;

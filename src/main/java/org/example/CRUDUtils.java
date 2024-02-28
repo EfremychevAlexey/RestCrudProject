@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.jdbc.DBConnection;
+import org.example.model.Student;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +15,7 @@ public class CRUDUtils {
     public static List<Student> getStudents(String query) {
         List<Student> students = new ArrayList<>();
 
-        try (Connection connection = DBUtils.getConnection();
+        try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -21,7 +24,7 @@ public class CRUDUtils {
                 String name = resultSet.getString("student_name");
                 int courseId = resultSet.getInt("course_id");
 
-                students.add(new Student(id, name, courseId));
+                students.add(new Student(name, courseId));
             }
 
         } catch (SQLException e) {
