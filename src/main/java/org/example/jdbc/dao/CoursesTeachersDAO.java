@@ -1,5 +1,6 @@
 package org.example.jdbc.dao;
 
+import org.example.jdbc.dao.DAOInterface.CoursesTeachersDAOInterface;
 import org.example.model.CoursesTeachers;
 
 public class CoursesTeachersDAO implements CoursesTeachersDAOInterface {

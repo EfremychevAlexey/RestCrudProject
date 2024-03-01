@@ -100,4 +100,6 @@ INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('4', '3');
 INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('5', '3');
 
 INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Efremychev', '1');
+INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Shakshin', '1');
+INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Ilin', '1');
 INSERT INTO school.students (student_name, course_id) VALUES ('Maxim Efremychev', '2');

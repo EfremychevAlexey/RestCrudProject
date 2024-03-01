@@ -15,111 +15,90 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
         DBInit.initDB();
         StudentsDAO studentsDAO = new StudentsDAO();
-////        Добавляем студента
-//        System.out.println("------------Добавляем студента: Денис Асамбаев курс = 2, Petr Ivanov курс = 1------------");
-//        studentsDAO.create(new Student("Денис Асамбаев", 2));
-//        studentsDAO.create(new Student("Petr Ivanov", 1));
-//
-//        for (Student s : studentsDAO.readAll()) {
-//            System.out.println(s);
-//        }
-//
-////        Получаем студентов
-//        System.out.println("------------Получаем студентов: Alexey Efremychev------------");
-//        ArrayList<Student> students = studentsDAO.read("Alexey Efremychev");
-//        for (Student s : students) {
-//            System.out.println(s);
-//        }
-//
-//        System.out.println("------------Получаем студентов: id=2------------");
-//        Student student = studentsDAO.read(2);
-//        System.out.println(student);
-//
-////        Обновляем студента
-//        System.out.println("------------Обновляем студента id=1, courxeId=5------------");
-//        studentsDAO.update(1, 5);
-//
-//        for (Student s : studentsDAO.readAll()) {
-//            System.out.println(s);
-//        }
-//
-////        Удаляем студента
-//        System.out.println("------------Удаляем студента id = 1------------");
-//        studentsDAO.delete(1);
-//        for (Student s : studentsDAO.readAll()) {
-//            System.out.println(s);
-//        }
 
+//        Добавляем студента
+        System.out.println("------------Добавляем студента: Ирина Демидова------------");
+        Student student = new Student();
+        student.setName("Ирина Демидова");
+        student.setCourse(new Course("JAVA"));
+        student.getCourse().setId(1);
+        int id = studentsDAO.create(student);
+        student.setId(id);
+        System.out.println(id);
 
+//        Получаем студентов
+        System.out.println("------------Получаем студента: id=2------------");
+        Student studentGet = studentsDAO.read(2);
+        System.out.println(studentGet);
 
+//        Обновляем студента
+        System.out.println("------------Обновляем студента id=1, courxeId=5------------");
+        Student studentUpdate = studentsDAO.read(1);
+        studentUpdate.setCourse(new Course(1, "Java"));
+        System.out.println(studentsDAO.update(studentUpdate));
 
+//        Удаляем студента
+        System.out.println("------------Удаляем студента id = 3------------");
+        System.out.println(studentsDAO.delete(student));
 
-//        List<Student> students = CRUDUtils.getStudents("SELECT * FROM school.students");
-//        students.forEach(System.out::println);
 
         CoursesDAO coursesDAO = new CoursesDAO();
-////        Добавляем курс
-//        System.out.println("------------Добавляем курс Wed-design------------");
-//        Course course = new Course("Wed-design");
-//        System.out.println(coursesDAO.create(course));
-//        for (Course c : coursesDAO.readAll()) {
-//            System.out.println(c);
-//        }
-//
-////        Получаем курс
-//        System.out.println("------------Получаем курс course_name = Java------------");
-//        System.out.println(coursesDAO.read("Java"));
-//
-//        System.out.println("------------Получаем курс id = 4------------");
-//        System.out.println(coursesDAO.read(4));
-//
-////        Обновляем курс
-//        System.out.println("------------Обновляем курс id = 1, course_name = Java-разработка------------");
-//        coursesDAO.update(1, "Java-разработка");
-//        for (Course c : coursesDAO.readAll()) {
-//            System.out.println(c);
-//        }
-//
-////        Удаляем курс
-//        System.out.println("------------Удаляем курс id = 6------------");
-//        coursesDAO.delete(6);
-//        for (Course c : coursesDAO.readAll()) {
-//            System.out.println(c);
-//        }
+//        Добавляем курс
+        System.out.println("------------Добавляем курс Wed-design------------");
+        Course courseWeb = new Course("Wed-design");
+        System.out.println(coursesDAO.create(courseWeb));
+
+//        Получаем курс
+        System.out.println("------------Получаем курс id = 1------------");
+        Course courseRead = coursesDAO.read(5);
+
+        System.out.println("Список учителей");
+        for (Teacher t : courseRead.getTeachers()) {
+            System.out.println(t);
+        }
+
+        System.out.println("Список студентов");
+        for (Student s : courseRead.getStudents()) {
+            System.out.println(s);
+        }
+
+//        Обновляем курс
+        System.out.println("------------Обновляем курс id = 1, course_name = Java-разработка------------");
+        Course courseUpdate = new Course(1, "Java-разработка");
+        System.out.println(coursesDAO.update(courseUpdate));
+
+
+//        Удаляем курс
+        System.out.println("------------Удаляем курс Web-дизайн------------");
+        System.out.println(coursesDAO.delete(courseWeb));
+
 
         TeacherDAO teacherDAO = new TeacherDAO();
-//        ////        Добавляем курс
-//        System.out.println("------------Добавляем учителя Васильев Алексендр------------");
-//        Teacher teacher = new Teacher("Васильев Алексендр");
-//        System.out.println(teacherDAO.create(teacher));
-//        for (Teacher c : teacherDAO.readAll()) {
-//            System.out.println(c);
-//        }
-//
-////        Получаем курс
-//        System.out.println("------------Получаем учителя teacher_name = Дудин Виктор------------");
-//        System.out.println(teacherDAO.read("Дудин Виктор"));
-//
-//        System.out.println("------------Получаем учителя id = 2------------");
-//        System.out.println(teacherDAO.read(2));
-//
-////        Обновляем курс
-//        System.out.println("------------Обновляем учителя id = 1, name = Murzich Roman------------");
-//        teacherDAO.update(1, "Murzich Roman");
-//        for (Teacher c : teacherDAO.readAll()) {
-//            System.out.println(c);
-//        }
-//
-////        Удаляем курс
-//        System.out.println("------------Удаляем учителя id = 6------------");
-//        teacherDAO.delete(6);
-//        for (Teacher c : teacherDAO.readAll()) {
-//            System.out.println(c);
-//        }
 
+        //        Добавляем учителя
+        System.out.println("------------Добавляем учителя Васильев Алексендр------------");
+        Teacher teacherNew = new Teacher("Васильев Алексендр");
+        System.out.println(teacherDAO.create(teacherNew));
+
+//        Получаем учителя
+        System.out.println("------------Получаем учителя teacher_name = 1------------");
+        Teacher teacherREAD = teacherDAO.read(1);
+        for (Course c : teacherREAD.getCourses()) {
+            System.out.println(c);
+        }
+
+//        Обновляем учителя
+        System.out.println("------------Обновляем учителя ------------");
+        Teacher teacherUpdate = new Teacher(1, "Демидов Дмитрий!!!!!!!!!");
+        System.out.println(teacherDAO.update(teacherUpdate));
+
+//        Удаляем курс
+        System.out.println("------------Удаляем учителя teacherNew------------");
+        System.out.println(teacherDAO.delete(teacherNew));
     }
 }

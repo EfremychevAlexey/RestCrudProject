@@ -1,30 +1,42 @@
 package org.example.jdbc.dao;
 
 import org.example.jdbc.DBConnection;
+import org.example.jdbc.dao.DAOInterface.DAO;
 import org.example.model.Course;
 import org.example.model.Student;
+import org.example.model.Teacher;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
-public class CoursesDAO implements CoursesDAOInterface {
+public class CoursesDAO implements DAO<Course, Integer> {
+
+    static final String CREATE = "INSERT INTO school.courses(course_name) VALUES(?) RETURNING id";
+    static final String READ = "SELECT " +
+            "c.id, c.course_name, t.id AS teacher_id, t.teacher_name, s.id AS student_id, s.student_name " +
+            "FROM school.teachers AS t JOIN school.courses_teachers AS ct ON ct.teacher_id = t.id " +
+            "JOIN school.courses AS c ON c.id = ct.course_id " +
+            "LEFT JOIN school.students AS s ON s.course_id = c.id " +
+            "WHERE c.id = ?";
+    static final String UPDATE = "UPDATE school.courses SET course_name = ? WHERE id = ? RETURNING id";
+    static final String DELETE = "DELETE FROM school.courses WHERE id = ? AND course_name = ? RETURNING id";
 
     @Override
     public int create(Course course) {
         int result = -1;
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQLCourses.CREATE.QUERY)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE)) {
 
             preparedStatement.setString(1, course.getName());
-            preparedStatement.execute();
-
-            PreparedStatement resultStatement = connection.prepareStatement("SELECT id FROM school.courses WHERE course_name = ?;");
-            resultStatement.setString(1, course.getName());
-            ResultSet resultSet = resultStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 result = resultSet.getInt("id");
+                course.setId(result);
             }
             return result;
 
@@ -34,39 +46,41 @@ public class CoursesDAO implements CoursesDAOInterface {
     }
 
     @Override
-    public Course read(String name) {
-        Course course = null;
+    public Course read(Integer id) {
+        Course course = new Course();
+        course.setId(id);
+
+        HashMap<Integer, Teacher> teacherHashMap = new HashMap<>();
+        HashMap<Integer, Student> studentHashMap = new HashMap<>();
+
         try (Connection connection = DBConnection.getConnection();
-             Statement statement = connection.createStatement()) {
-
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM school.courses");
-
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String courseName = resultSet.getString("course_name");
-
-                course = new Course(id, courseName);
-            }
-            return course;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Course read(int id) {
-        Course course = null;
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQLCourses.READ.QUERY)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(READ)) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                String name = resultSet.getString("course_name");
-                course = new Course(id, name);
+            while (resultSet.next()) {
+                if (course.getName() == null) {
+                    course.setName(resultSet.getString("course_name"));
+                }
+
+                int teacherId = resultSet.getInt("teacher_id");
+                if (!teacherHashMap.containsKey(teacherId) && teacherId != 0) {
+                    teacherHashMap.put(teacherId, new TeacherDAO().read(teacherId));
+                }
+
+                int studentId = resultSet.getInt("student_id");
+                if (!studentHashMap.containsKey(studentId) && studentId != 0) {
+                    studentHashMap.put(studentId, new StudentsDAO().read(studentId));
+                }
             }
+
+            ArrayList<Teacher> teachers = new ArrayList<>(teacherHashMap.values());
+            course.setTeachers(teachers);
+
+            ArrayList<Student> students = new ArrayList<>(studentHashMap.values());
+            course.setStudents(students);
+
             return course;
 
         } catch (SQLException e) {
@@ -74,68 +88,45 @@ public class CoursesDAO implements CoursesDAOInterface {
         }
     }
 
-    public ArrayList<Course> readAll() {
 
-        ArrayList<Course> courses = new ArrayList<>();
+    @Override
+    public int update(Course course) {
+        int result = -1;
 
         try (Connection connection = DBConnection.getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM school.courses");
+            preparedStatement.setString(1, course.getName());
+            preparedStatement.setInt(2, course.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String courseName = resultSet.getString("course_name");
-
-                courses.add(new Course(id, courseName));
+            if (resultSet.next()) {
+                result = resultSet.getInt("id");
             }
-            return courses;
-
+            return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void update(int courseId, String courseName) {
+    public int delete(Course course) {
+        int result = 0;
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQLCourses.UPDATE.QUERY)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
 
-            preparedStatement.setString(1, courseName);
-            preparedStatement.setInt(2, courseId);
-            preparedStatement.execute();
+            preparedStatement.setInt(1, course.getId());
+            preparedStatement.setString(2, course.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            if (resultSet.next()) {
+                result = resultSet.getInt("id");
+            }
 
+            return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void delete(int id) {
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQLCourses.DELETE.QUERY)) {
-
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    enum SQLCourses {
-        CREATE("INSERT INTO school.courses(course_name) VALUES(?);"),
-        READ("SELECT * FROM school.courses WHERE id = ?;"),
-        UPDATE("UPDATE school.courses SET course_name = ? WHERE id = ?;"),
-        DELETE("DELETE FROM school.courses WHERE id = ?;");
-
-        final String QUERY;
-
-        SQLCourses(String QUERY) {
-            this.QUERY = QUERY;
         }
     }
 }

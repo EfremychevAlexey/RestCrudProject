@@ -1,18 +1,25 @@
 package org.example.model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Teacher {
-    int id;
-    String name;
+    private int id;
+    private String name;
+    private ArrayList<Course> courses;
+
+    public Teacher() {
+    }
 
     public Teacher(String name) {
         this.name = name;
+        courses = new ArrayList<>();
     }
 
     public Teacher(int id, String name) {
         this.id = id;
         this.name = name;
+        courses = new ArrayList<>();
     }
 
     @Override
@@ -50,5 +57,13 @@ public class Teacher {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ArrayList<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
     }
 }

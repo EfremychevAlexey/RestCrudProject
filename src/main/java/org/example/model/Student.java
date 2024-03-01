@@ -5,17 +5,20 @@ import java.util.Objects;
 public class Student {
     private int id;
     private String name;
-    private int courseId;
+    private Course course;
 
-    public Student(String name, int courseId) {
-        this.name = name;
-        this.courseId = courseId;
+    public Student() {
     }
 
-    public Student(int id, String name, int courseId) {
+    public Student(String name, Course course) {
+        this.name = name;
+        this.course = course;
+    }
+
+    public Student(int id, String name, Course course) {
         this.id = id;
         this.name = name;
-        this.courseId = courseId;
+        this.course = course;
     }
 
     @Override
@@ -23,12 +26,12 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return id == student.id && courseId == student.courseId && Objects.equals(name, student.name);
+        return id == student.id && course == student.course && Objects.equals(name, student.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, courseId);
+        return Objects.hash(id, name, course.getId());
     }
 
     public int getId() {
@@ -47,12 +50,12 @@ public class Student {
         this.name = name;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class Student {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", courseId=" + courseId +
+                ", courseId=" + course.getName() +
                 '}';
     }
 }

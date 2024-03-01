@@ -1,4 +1,4 @@
-package org.example.jdbc.dao;
+package org.example.jdbc.dao.DAOInterface;
 
 import org.example.model.CoursesTeachers;
 import org.example.model.Teacher;

@@ -3,10 +3,10 @@ package org.example.model;
 import java.util.Objects;
 
 public class CoursesTeachers {
+    private int id;
+    private int courseID;
+    private int teacherID;
 
-    int id;
-    int courseID;
-    int teacherID;
 
     public CoursesTeachers(int courseID, int teacherID) {
         this.courseID = courseID;
