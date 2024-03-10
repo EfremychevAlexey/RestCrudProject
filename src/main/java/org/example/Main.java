@@ -1,18 +1,15 @@
 package org.example;
 
 import org.example.jdbc.DBInit;
-import org.example.jdbc.dao.CoursesDAO;
-import org.example.jdbc.dao.StudentsDAO;
-import org.example.jdbc.dao.TeacherDAO;
+import org.example.jdbc.dao.modelDAO.CoursesDAO;
+import org.example.jdbc.dao.modelDAO.StudentsDAO;
+import org.example.jdbc.dao.modelDAO.TeacherDAO;
 import org.example.model.Course;
 import org.example.model.Student;
 import org.example.model.Teacher;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 

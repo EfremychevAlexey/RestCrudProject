@@ -1,4 +1,4 @@
-package org.example.jdbc.dao.DAOInterface;
+package org.example.jdbc.dao;
 
 public interface DAO<Entity, Key> {
     int create(Entity entity);

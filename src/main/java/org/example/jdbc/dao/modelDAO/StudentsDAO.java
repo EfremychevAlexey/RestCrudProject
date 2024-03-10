@@ -1,7 +1,7 @@
-package org.example.jdbc.dao;
+package org.example.jdbc.dao.modelDAO;
 
 import org.example.jdbc.DBConnection;
-import org.example.jdbc.dao.DAOInterface.DAO;
+import org.example.jdbc.dao.DAO;
 import org.example.model.Course;
 import org.example.model.Student;
 

@@ -1,7 +1,7 @@
-package org.example.jdbc.dao;
+package org.example.jdbc.dao.modelDAO;
 
 import org.example.jdbc.DBConnection;
-import org.example.jdbc.dao.DAOInterface.DAO;
+import org.example.jdbc.dao.DAO;
 import org.example.model.Course;
 import org.example.model.Student;
 import org.example.model.Teacher;
@@ -9,8 +9,6 @@ import org.example.model.Teacher;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 public class CoursesDAO implements DAO<Course, Integer> {
 
