@@ -8,12 +8,23 @@ import org.example.model.Teacher;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class TeacherDAO implements DAO<Teacher, Integer> {
+public class TeachersDAO implements DAO<Teacher, Integer> {
+    private static TeachersDAO instance = null;
 
     static final String CREATE = "INSERT INTO school.teachers(teacher_name) VALUES(?) RETURNING id";
     static final String READ = "SELECT teacher_name FROM school.teachers WHERE id = ?";
     static final String UPDATE = "UPDATE school.teachers SET teacher_name = ? WHERE id = ? RETURNING id";
     static final String DELETE = "DELETE FROM school.teachers WHERE id = ? AND teacher_name = ? RETURNING id";
+
+    private TeachersDAO() {
+    }
+
+    public static TeachersDAO getInstance() {
+        if (instance == null) {
+            instance = new TeachersDAO();
+        }
+        return instance;
+    }
 
     @Override
     public int create(Teacher teacher) {
@@ -38,7 +49,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
 
     public Teacher read(Integer id) {
         Teacher teacher = new Teacher();
-        CoursesTeachersDAO coursesTeachersDAO = new CoursesTeachersDAO();
+        CoursesTeachersDAO coursesTeachersDAO = CoursesTeachersDAO.getInstance();
         ArrayList<Course> courses = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection();

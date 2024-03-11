@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CoursesTeachersDAO implements CoursesTeachersDAOInterface {
+    private static CoursesTeachersDAO instance = null;
 
     static final String CREATE = "INSERT INTO school.courses_teachers(course_id, teacher_id) VALUES(?, ?)";
     static final String READ_ALL_COURSES_BY_TEACHER = "SELECT c.id AS course_id, c.course_name " +
@@ -30,6 +31,15 @@ public class CoursesTeachersDAO implements CoursesTeachersDAOInterface {
     static final String DELETE = "DELETE FROM school.courses_teachers " +
             "course_id = ? AND teacher_id = ?";
 
+    private CoursesTeachersDAO() {
+    }
+
+    public static CoursesTeachersDAO getInstance() {
+        if (instance == null) {
+            instance = new CoursesTeachersDAO();
+        }
+        return instance;
+    }
 
     @Override
     public CoursesTeachers create(CoursesTeachers coursesTeachers) {

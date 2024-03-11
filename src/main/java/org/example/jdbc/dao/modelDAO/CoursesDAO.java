@@ -3,19 +3,26 @@ package org.example.jdbc.dao.modelDAO;
 import org.example.jdbc.DBConnection;
 import org.example.jdbc.dao.DAO;
 import org.example.model.Course;
-import org.example.model.Student;
-import org.example.model.Teacher;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CoursesDAO implements DAO<Course, Integer> {
+    private static CoursesDAO instance = null;
 
     static final String CREATE = "INSERT INTO school.courses(course_name) VALUES(?) RETURNING id";
     static final String READ = "SELECT * FROM school.courses WHERE id = ?";
     static final String UPDATE = "UPDATE school.courses SET course_name = ? WHERE id = ? RETURNING id";
     static final String DELETE = "DELETE FROM school.courses WHERE id = ? AND course_name = ? RETURNING id";
+
+    private CoursesDAO() {
+    }
+
+    public static CoursesDAO getInstance() {
+        if (instance == null) {
+            instance = new CoursesDAO();
+        }
+        return instance;
+    }
 
     @Override
     public int create(Course course) {
@@ -41,8 +48,8 @@ public class CoursesDAO implements DAO<Course, Integer> {
     @Override
     public Course read(Integer id) {
         Course course = new Course();
-        CoursesTeachersDAO coursesTeachersDAO = new CoursesTeachersDAO();
-        StudentsDAO studentsDAO = new StudentsDAO();
+        CoursesTeachersDAO coursesTeachersDAO = CoursesTeachersDAO.getInstance();
+        StudentsDAO studentsDAO = StudentsDAO.getInstance();
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ)) {

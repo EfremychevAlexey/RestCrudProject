@@ -9,6 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class StudentsDAO implements StudentDAOInterface {
+    private static StudentsDAO instance = null;
+
     static final String CREATE = "INSERT INTO school.students(student_name, course_id) VALUES(?, ?) RETURNING id";
     static final String READ = "SELECT s.id, s.student_name, c.id AS course_id, c.course_name" +
             " FROM school.students AS s LEFT JOIN school.courses AS c ON s.course_id = c.id WHERE s.id = ?";
@@ -16,8 +18,14 @@ public class StudentsDAO implements StudentDAOInterface {
     static final String UPDATE = "UPDATE school.students SET course_id = ? WHERE id = ? RETURNING id";
     static final String DELETE = "DELETE FROM school.students WHERE id = ? AND student_name = ? AND course_id = ? RETURNING id";
 
+    private StudentsDAO() {
+    }
 
-    public StudentsDAO() {
+    public static StudentsDAO getInstance() {
+        if (instance == null) {
+            instance = new StudentsDAO();
+        }
+        return instance;
     }
 
     @Override
@@ -42,7 +50,7 @@ public class StudentsDAO implements StudentDAOInterface {
 
     @Override
     public Student read(Integer id) {
-        CoursesDAO coursesDAO = new CoursesDAO();
+        CoursesDAO coursesDAO = CoursesDAO.getInstance();
         Student result = null;
 
         try (Connection connection = DBConnection.getConnection();
@@ -67,7 +75,7 @@ public class StudentsDAO implements StudentDAOInterface {
     @Override
     public ArrayList<Student> readAllByCourse(Course course) {
         ArrayList<Student> students = new ArrayList<>();
-        CoursesDAO coursesDAO = new CoursesDAO();
+        CoursesDAO coursesDAO = CoursesDAO.getInstance();
 
         try (Connection connection = DBConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_BY_COURSE)) {

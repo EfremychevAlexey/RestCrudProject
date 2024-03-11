@@ -3,7 +3,7 @@ package org.example;
 import org.example.jdbc.DBInit;
 import org.example.jdbc.dao.modelDAO.CoursesDAO;
 import org.example.jdbc.dao.modelDAO.StudentsDAO;
-import org.example.jdbc.dao.modelDAO.TeacherDAO;
+import org.example.jdbc.dao.modelDAO.TeachersDAO;
 import org.example.model.Course;
 import org.example.model.Student;
 import org.example.model.Teacher;
@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
         DBInit.initDB();
-        StudentsDAO studentsDAO = new StudentsDAO();
+        StudentsDAO studentsDAO = StudentsDAO.getInstance();
 
 //        Добавляем студента
         System.out.println("------------Добавляем студента: Ирина Демидова------------");
@@ -44,7 +44,7 @@ public class Main {
         System.out.println(studentsDAO.delete(student));
 
 
-        CoursesDAO coursesDAO = new CoursesDAO();
+        CoursesDAO coursesDAO = CoursesDAO.getInstance();
 //        Добавляем курс
         System.out.println("------------Добавляем курс Wed-design------------");
         Course courseWeb = new Course("Wed-design");
@@ -75,7 +75,7 @@ public class Main {
         System.out.println(coursesDAO.delete(courseWeb));
 
 
-        TeacherDAO teacherDAO = new TeacherDAO();
+        TeachersDAO teacherDAO = TeachersDAO.getInstance();
 
         //        Добавляем учителя
         System.out.println("------------Добавляем учителя Васильев Алексендр------------");
