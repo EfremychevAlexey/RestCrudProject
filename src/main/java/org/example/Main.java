@@ -30,7 +30,7 @@ public class Main {
 
 //        Получаем студентов
         System.out.println("------------Получаем студента: id=2------------");
-        Student studentGet = studentsDAO.read(2);
+        Student studentGet = studentsDAO.read(1);
         System.out.println(studentGet);
 
 //        Обновляем студента

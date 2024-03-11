@@ -11,11 +11,7 @@ import java.util.ArrayList;
 public class TeacherDAO implements DAO<Teacher, Integer> {
 
     static final String CREATE = "INSERT INTO school.teachers(teacher_name) VALUES(?) RETURNING id";
-    static final String READ = "SELECT t.id, t.teacher_name, c.id AS course_id, c.course_name " +
-            "FROM school.courses AS c " +
-            "JOIN school.courses_teachers AS ct ON ct.course_id = c.id " +
-            "JOIN school.teachers AS t ON t.id = ct.teacher_id WHERE t.id = ?;";
-
+    static final String READ = "SELECT teacher_name FROM school.teachers WHERE id = ?";
     static final String UPDATE = "UPDATE school.teachers SET teacher_name = ? WHERE id = ? RETURNING id";
     static final String DELETE = "DELETE FROM school.teachers WHERE id = ? AND teacher_name = ? RETURNING id";
 
@@ -42,6 +38,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
 
     public Teacher read(Integer id) {
         Teacher teacher = new Teacher();
+        CoursesTeachersDAO coursesTeachersDAO = new CoursesTeachersDAO();
         ArrayList<Course> courses = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection();
@@ -51,24 +48,17 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                if (resultSet.getInt("id") == id) {
-                    String teacherName = resultSet.getString("teacher_name");
-                    teacher.setId(id);
-                    teacher.setName(teacherName);
-                }
-
-                int courseId = resultSet.getInt("course_id");
-                String courseName = resultSet.getString("course_name");
-                courses.add(new Course(courseId, courseName));
+                String teacherName = resultSet.getString("teacher_name");
+                teacher.setId(id);
+                teacher.setName(teacherName);
+                teacher.setCourses(coursesTeachersDAO.readAllCoursesByTeacher(teacher));
             }
-            teacher.setCourses(courses);
             return teacher;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     @Override
     public int update(Teacher teacher) {

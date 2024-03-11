@@ -3,20 +3,15 @@ package org.example.model;
 import java.util.Objects;
 
 public class CoursesTeachers {
-    private int id;
-    private int courseID;
-    private int teacherID;
+    private Course course;
+    private Teacher teacher;
 
-
-    public CoursesTeachers(int courseID, int teacherID) {
-        this.courseID = courseID;
-        this.teacherID = teacherID;
+    public CoursesTeachers() {
     }
 
-    public CoursesTeachers(int id, int courseID, int teacherID) {
-        this.id = id;
-        this.courseID = courseID;
-        this.teacherID = teacherID;
+    public CoursesTeachers(Course course, Teacher teacher) {
+        this.course = course;
+        this.teacher = teacher;
     }
 
     @Override
@@ -24,44 +19,27 @@ public class CoursesTeachers {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CoursesTeachers that = (CoursesTeachers) o;
-        return id == that.id && courseID == that.courseID && teacherID == that.teacherID;
+        return Objects.equals(course, that.course) && Objects.equals(teacher, that.teacher);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseID, teacherID);
+        return Objects.hash(course, teacher);
     }
 
-    @Override
-    public String toString() {
-        return "CoursesTeachers{" +
-                "id=" + id +
-                ", courseID=" + courseID +
-                ", teacherID=" + teacherID +
-                '}';
+    public Course getCourse() {
+        return course;
     }
 
-    public int getId() {
-        return id;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Teacher getTeacher() {
+        return teacher;
     }
 
-    public int getCourseID() {
-        return courseID;
-    }
-
-    public void setCourseID(int courseID) {
-        this.courseID = courseID;
-    }
-
-    public int getTeacherID() {
-        return teacherID;
-    }
-
-    public void setTeacherID(int teacherID) {
-        this.teacherID = teacherID;
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 }

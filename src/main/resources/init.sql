@@ -53,16 +53,15 @@ ALTER TABLE IF EXISTS school.students
 --Создаем связывающую таблицу для курсов и учителей(связь многие ко многим)
 CREATE TABLE IF NOT EXISTS school.courses_teachers
 (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     course_id bigint NOT NULL,
     teacher_id bigint NOT NULL,
-    CONSTRAINT teachers_courses_pkey PRIMARY KEY (id),
-    CONSTRAINT course_fkey FOREIGN KEY (course_id)
+    CONSTRAINT course_teacher_pkey PRIMARY KEY (course_id, teacher_id),
+    CONSTRAINT courses_fkey FOREIGN KEY (course_id)
         REFERENCES school.courses (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
-    CONSTRAINT teacher_fkey FOREIGN KEY (teacher_id)
+    CONSTRAINT teachers_fkey FOREIGN KEY (teacher_id)
         REFERENCES school.teachers (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -72,9 +71,6 @@ CREATE TABLE IF NOT EXISTS school.courses_teachers
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS school.courses_teachers
-    OWNER to admin;
-
-ALTER TABLE IF EXISTS school.teachers_courses
     OWNER to admin;
 
 

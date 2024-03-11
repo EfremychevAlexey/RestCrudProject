@@ -16,7 +16,7 @@ public class CourseServlet extends HttpServlet {
 
         response.setContentType("text/html");
         try (PrintWriter writer = response.getWriter()) {
-            writer.println("<h2>HelloServlet</h2>");
+            writer.println("<h2></h2>");
         }
     }
 }
