@@ -2,20 +2,22 @@ package org.example.model;
 
 import java.util.Objects;
 
+/**
+ * Student entity
+ * <p>
+ * Relation:
+ * Many To One: Student -> Course
+ */
+
 public class Student {
-    private int id;
+    private Long id;
     private String name;
     private Course course;
 
     public Student() {
     }
 
-    public Student(String name, Course course) {
-        this.name = name;
-        this.course = course;
-    }
-
-    public Student(int id, String name, Course course) {
+    public Student(Long id, String name, Course course) {
         this.id = id;
         this.name = name;
         this.course = course;
@@ -29,17 +31,8 @@ public class Student {
         return id == student.id && course == student.course && Objects.equals(name, student.name);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, course.getId());
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -56,15 +49,6 @@ public class Student {
 
     public void setCourse(Course course) {
         this.course = course;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", courseId=" + course.getName() +
-                '}';
     }
 }
 

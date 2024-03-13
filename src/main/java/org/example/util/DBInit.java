@@ -1,4 +1,6 @@
-package org.example.jdbc;
+package org.example.util;
+
+import org.example.db.DBConnectionManagerImpl;
 
 import java.io.*;
 import java.sql.Connection;
@@ -11,7 +13,7 @@ public class DBInit {
     public static void initDB() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = DBConnectionManagerImpl.getConnection();
              Statement statement = connection.createStatement()) {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
 

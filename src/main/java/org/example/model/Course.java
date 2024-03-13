@@ -3,8 +3,16 @@ package org.example.model;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * The department where the user works and the student studies
+ * Relation:
+ * One To Many: Course <- Student
+ * Many To Many: Course <-> Teacher
+ */
+
 public class Course {
-    private int id;
+    //private static final CoursesTeachersDAO//////
+    private Long id;
     private String name;
     private ArrayList<Student> students;
     private ArrayList<Teacher> teachers;
@@ -12,17 +20,11 @@ public class Course {
     public Course() {
     }
 
-    public Course(String name) {
-        this.name = name;
-        students = new ArrayList<>();
-        teachers = new ArrayList<>();
-    }
-
-    public Course(int id, String name) {
+    public Course(Long id, String name, ArrayList<Student> students, ArrayList<Teacher> teachers) {
         this.id = id;
         this.name = name;
-        students = new ArrayList<>();
-        teachers = new ArrayList<>();
+        this.students = students;
+        this.teachers = teachers;
     }
 
     @Override
@@ -33,25 +35,8 @@ public class Course {
         return id == course.id && Objects.equals(name, course.name);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public int getId() {
+    public long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

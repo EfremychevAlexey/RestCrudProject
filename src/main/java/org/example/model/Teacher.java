@@ -1,54 +1,36 @@
 package org.example.model;
 
+import org.example.repositoryDAO.CoursesTeachersDAO;
+import org.example.repositoryDAO.impl.CoursesTeachersDAOImpl;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+/**
+ * Teacher entity
+ * <p>
+ * Relation:
+ * Many To Many: Teacher <-> Course
+ */
+
 public class Teacher {
-    private int id;
+    private static final CoursesTeachersDAO coursesTeachersDAO = CoursesTeachersDAOImpl.getInstance();
+    private Long id;
     private String name;
-    private ArrayList<Course> courses;
+    private List<Course> courseList;
 
     public Teacher() {
     }
 
-    public Teacher(String name) {
-        this.name = name;
-        courses = new ArrayList<>();
-    }
-
-    public Teacher(int id, String name) {
+    public Teacher(Long id, String name, List<Course> courses) {
         this.id = id;
         this.name = name;
-        courses = new ArrayList<>();
+        this.courseList = courses;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Teacher teachers = (Teacher) o;
-        return id == teachers.id && Objects.equals(name, teachers.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Teachers{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -59,11 +41,14 @@ public class Teacher {
         this.name = name;
     }
 
-    public ArrayList<Course> getCourses() {
-        return courses;
+    public List<Course> getCourses() {
+        if (courseList == null) {
+            this.courseList = coursesTeachersDAO.findCoursesByTeacherId(this.id);
+        }
+        return courseList;
     }
 
-    public void setCourses(ArrayList<Course> courses) {
-        this.courses = courses;
+    public void setCourses(List<Course> courseList) {
+        this.courseList = courseList;
     }
 }
