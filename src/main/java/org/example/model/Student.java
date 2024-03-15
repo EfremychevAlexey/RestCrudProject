@@ -23,14 +23,6 @@ public class Student {
         this.course = course;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return id == student.id && course == student.course && Objects.equals(name, student.name);
-    }
-
     public Long getId() {
         return id;
     }
@@ -49,6 +41,15 @@ public class Student {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", course=" + course +
+                '}';
     }
 }
 

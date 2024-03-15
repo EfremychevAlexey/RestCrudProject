@@ -1,7 +1,11 @@
 package org.example.model;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import org.example.repositoryDAO.CourseTeacherDAO;
+import org.example.repositoryDAO.StudentDAO;
+import org.example.repositoryDAO.impl.CourseTeacherDAOImpl;
+import org.example.repositoryDAO.impl.StudentDAOImpl;
+
+import java.util.List;
 
 /**
  * The department where the user works and the student studies
@@ -11,28 +15,21 @@ import java.util.Objects;
  */
 
 public class Course {
-    //private static final CoursesTeachersDAO//////
+    private static final CourseTeacherDAO coursesTeachersDAO = CourseTeacherDAOImpl.getInstance();
+    private static final StudentDAO studentDAO = StudentDAOImpl.getInstance();
     private Long id;
     private String name;
-    private ArrayList<Student> students;
-    private ArrayList<Teacher> teachers;
+    private List<Student> studentList;
+    private List<Teacher> teacherList;
 
     public Course() {
     }
 
-    public Course(Long id, String name, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+    public Course(Long id, String name, List<Student> studentList, List<Teacher> teacherList) {
         this.id = id;
         this.name = name;
-        this.students = students;
-        this.teachers = teachers;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return id == course.id && Objects.equals(name, course.name);
+        this.studentList = studentList;
+        this.teacherList = teacherList;
     }
 
     public long getId() {
@@ -47,19 +44,36 @@ public class Course {
         this.name = name;
     }
 
-    public ArrayList<Student> getStudents() {
-        return students;
+    public List<Student> getStudents() {
+        if (studentList == null) {
+            studentList = studentDAO.findAllByCourseId(this.id);
+        }
+        return studentList;
     }
 
-    public void setStudents(ArrayList<Student> students) {
-        this.students = students;
+    public void setStudents(List<Student> studentList) {
+        this.studentList = studentList;
     }
 
-    public ArrayList<Teacher> getTeachers() {
-        return teachers;
+    public List<Teacher> getTeachers() {
+        if (teacherList == null) {
+            teacherList = coursesTeachersDAO.findTeachersByCourseId(this.id);
+        }
+        return teacherList;
     }
 
-    public void setTeachers(ArrayList<Teacher> teachers) {
-        this.teachers = teachers;
+    public void setTeachers(List<Teacher> teacherList) {
+        this.teacherList = teacherList;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", studentList=" + studentList +
+                ", teacherList=" + teacherList +
+                '}';
     }
 }

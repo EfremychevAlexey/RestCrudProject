@@ -1,12 +1,13 @@
 package org.example.repositoryDAO.impl;
 
-import org.example.db.DBConnectionManager;
-import org.example.db.DBConnectionManagerImpl;
+import org.example.db.ConnectionManager;
+import org.example.db.ConnectionManagerImpl;
 import org.example.exception.RepositoryException;
 import org.example.model.Course;
 import org.example.model.CourseTeacher;
 import org.example.model.Teacher;
-import org.example.repositoryDAO.CoursesTeachersDAO;
+import org.example.repositoryDAO.CourseTeacherDAO;
+import org.example.repositoryDAO.TeacherDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CoursesTeachersDAOImpl implements CoursesTeachersDAO {
-    private static final DBConnectionManager dbConnectionManager = DBConnectionManagerImpl.getInstance();
+public class CourseTeacherDAOImpl implements CourseTeacherDAO {
+    private static final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
     private static final CourseDAOImpl courseDAOImpl = CourseDAOImpl.getInstance();
-    private static final TeachersDAOImpl teacherDAOImpl = TeachersDAOImpl.getInstance();
-    private static CoursesTeachersDAOImpl instance = null;
+    private static final TeacherDAO teacherDAO = TeacherDAOImpl.getInstance();
+    private static CourseTeacherDAOImpl instance = null;
 
     static final String SAVE_SQL = "INSERT INTO school.courses_teachers(course_id, teacher_id) VALUES(?, ?)";
     static final String UPDATE_SQL = "UPDATE school.courses_teachers " +
@@ -41,12 +42,12 @@ public class CoursesTeachersDAOImpl implements CoursesTeachersDAO {
     static final String EXIST_BY_ID_SQL = "SELECT exists (SELECT 1" +
             "FROM school.courses_teachers WHERE id = ? LIMIT 1)";
 
-    private CoursesTeachersDAOImpl() {
+    private CourseTeacherDAOImpl() {
     }
 
-    public static synchronized CoursesTeachersDAOImpl getInstance() {
+    public static synchronized CourseTeacherDAOImpl getInstance() {
         if (instance == null) {
-            instance = new CoursesTeachersDAOImpl();
+            instance = new CourseTeacherDAOImpl();
         }
         return instance;
     }
@@ -262,7 +263,7 @@ public class CoursesTeachersDAOImpl implements CoursesTeachersDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Long teacherId = resultSet.getLong("teacher_id");
-                Optional<Teacher> optionalTeacher = teacherDAOImpl.findById(teacherId);
+                Optional<Teacher> optionalTeacher = teacherDAO.findById(teacherId);
                 if (optionalTeacher.isPresent()) {
                     teacherList.add(optionalTeacher.get());
                 }

@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS school.students
 (
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     student_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    course_id bigint NOT NULL,
+    course_id bigint,
     CONSTRAINT students_pkey PRIMARY KEY (id),
     CONSTRAINT courses_fkey FOREIGN KEY (course_id)
         REFERENCES school.courses (id) MATCH SIMPLE
@@ -53,9 +53,10 @@ ALTER TABLE IF EXISTS school.students
 --Создаем связывающую таблицу для курсов и учителей(связь многие ко многим)
 CREATE TABLE IF NOT EXISTS school.courses_teachers
 (
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     course_id bigint NOT NULL,
     teacher_id bigint NOT NULL,
-    CONSTRAINT course_teacher_pkey PRIMARY KEY (course_id, teacher_id),
+    CONSTRAINT courses_teachers_pkey PRIMARY KEY (id),
     CONSTRAINT courses_fkey FOREIGN KEY (course_id)
         REFERENCES school.courses (id) MATCH SIMPLE
         ON UPDATE NO ACTION

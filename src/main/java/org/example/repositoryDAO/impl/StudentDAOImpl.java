@@ -1,7 +1,7 @@
 package org.example.repositoryDAO.impl;
 
-import org.example.db.DBConnectionManager;
-import org.example.db.DBConnectionManagerImpl;
+import org.example.db.ConnectionManager;
+import org.example.db.ConnectionManagerImpl;
 import org.example.exception.RepositoryException;
 import org.example.model.Course;
 import org.example.model.Student;
@@ -13,25 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class StudentsDAOImpl implements StudentDAO {
-    private static StudentsDAOImpl instance = null;
-    private final DBConnectionManager dbConnectionManager = DBConnectionManagerImpl.getInstance();
+public class StudentDAOImpl implements StudentDAO {
+    private static StudentDAOImpl instance = null;
+    private final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
     private final CourseDAO courseDAO = CourseDAOImpl.getInstance();
 
 
-    static final String SAVE_SQL = "INSERT INTO school.students(student_name, course_id) VALUES(?, ?)";
+    static final String SAVE_SQL = "INSERT INTO school.students(student_name) VALUES(?)";
     static final String UPDATE_SQL = "UPDATE school.students SET student_name = ?, course_id = ? WHERE id = ?";
+    static final String UPDATE_BY_DELETE_COURSE_ID_SQL = "UPDATE school.students SET course_id = NULL WHERE course_id = ?";
     static final String DELETE_SQL = "DELETE FROM school.students WHERE id = ?";
     static final String FIND_BY_ID_SQL = "SELECT id, student_name, course_id FROM school.students WHERE id = ?";
     static final String FIND_ALL_SQL = "SELECT id, student_name, course_id FROM school.students";
+    static final String FIND_ALL_BY_COURSE_ID_SQL = "SELECT id, student_name, course_id FROM school.students WHERE course_id = ?";
     static final String EXIST_BY_ID = "SELECT exists (SELECT 1 FROM school.students WHERE id = ? LIMIT 1)";
 
-    private StudentsDAOImpl() {
+    private StudentDAOImpl() {
     }
 
-    public static synchronized StudentsDAOImpl getInstance() {
+    public static synchronized StudentDAOImpl getInstance() {
         if (instance == null) {
-            instance = new StudentsDAOImpl();
+            instance = new StudentDAOImpl();
         }
         return instance;
     }
@@ -47,14 +49,9 @@ public class StudentsDAOImpl implements StudentDAO {
     @Override
     public Student save(Student student) {
         try (Connection connection = dbConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, student.getName());
-            if (student.getCourse() == null) {
-                preparedStatement.setNull(2, Types.NULL);
-            } else {
-                preparedStatement.setLong(2, student.getCourse().getId());
-            }
             preparedStatement.executeUpdate();
 
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -84,6 +81,18 @@ public class StudentsDAOImpl implements StudentDAO {
             }
             preparedStatement.setLong(3, student.getCourse().getId());
 
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
+    public void updateByCourseId(Long courseId) {
+        try (Connection connection = dbConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BY_DELETE_COURSE_ID_SQL)) {
+
+            preparedStatement.setLong(1, courseId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RepositoryException(e);
@@ -154,5 +163,22 @@ public class StudentsDAOImpl implements StudentDAO {
             throw new RuntimeException(e);
         }
         return isExists;
+    }
+
+    @Override
+    public List<Student> findAllByCourseId(Long courseId) {
+        List<Student> studentList = new ArrayList<>();
+        try (Connection connection = dbConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_COURSE_ID_SQL)) {
+
+            preparedStatement.setLong(1, courseId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                studentList.add(createStudent(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return studentList;
     }
 }

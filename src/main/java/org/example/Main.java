@@ -1,11 +1,108 @@
 package org.example;
 
+import org.example.db.ConnectionManager;
+import org.example.db.ConnectionManagerImpl;
+import org.example.exception.NotFoundException;
+import org.example.model.Course;
+import org.example.model.Student;
+import org.example.repositoryDAO.CourseDAO;
+import org.example.repositoryDAO.StudentDAO;
+import org.example.repositoryDAO.impl.CourseDAOImpl;
+import org.example.repositoryDAO.impl.StudentDAOImpl;
+import org.example.service.CourseService;
+import org.example.service.StudentService;
+import org.example.service.impl.CourseServiceImpl;
+import org.example.service.impl.StudentServiceImpl;
+import org.example.servlet.dto.CourseOutGoingDto;
+import org.example.servlet.dto.StudentIncomingDto;
+import org.example.servlet.dto.StudentOutGoingDto;
+import org.example.servlet.mapper.CourseDtoMapper;
+import org.example.servlet.mapper.StudentDtoMapper;
+import org.example.servlet.mapper.impl.CourseDtoMapperImpl;
+import org.example.servlet.mapper.impl.StudentDtoMapperImpl;
+import org.example.util.DBInit;
+
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, IOException, InterruptedException {
+    public static void main(String[] args) throws SQLException, IOException, InterruptedException, NotFoundException {
+
+        ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
+        CourseService courseService = CourseServiceImpl.getInstance();
+        StudentService studentService = StudentServiceImpl.getInstance();
+        DBInit.init(connectionManager);
+        CourseDAO courseDAO = CourseDAOImpl.getInstance();
+        StudentDAO studentDAO = StudentDAOImpl.getInstance();
+        StudentDtoMapper studentDtoMapper = StudentDtoMapperImpl.getInstance();
+        CourseDtoMapper courseDtoMapper = CourseDtoMapperImpl.getInstance();
+
+        System.out.println("------------------CourseOutGoingDto------------------");
+
+        List<Course> courseList = courseDAO.findAll();
+        for (Course c : courseList) {
+            System.out.println(c);
+        }
+
+        System.out.println();
+        System.out.println("------------------CourseOutGoingDto------------------");
+        List<CourseOutGoingDto> courseOutGoingDtoList = courseService.findAll();
+        for (CourseOutGoingDto c : courseOutGoingDtoList) {
+            System.out.println(c);
+        }
+
+        System.out.println();
+        System.out.println("------------------CourseOutGoingDto  by id------------------");
+        Long courseId = Long.parseLong("1");
+        CourseOutGoingDto courseOutGoingDto = courseService.findById(courseId);
+
+
+
+        System.out.println();
+        System.out.println("------------------Delete course by id------------------");
+        Long courseIdDELETE = Long.parseLong("1");
+        courseService.delete(courseIdDELETE);
+
+
+        System.out.println();
+        System.out.println("------------------Update course by id------------------");
+        Course courseUpdate = new Course(3L, "Java1111", null, null);
+        courseDAO.update(courseUpdate);
+
+        System.out.println();
+        System.out.println("------------------GetAll Student------------------");
+        List<Student> studentList = studentDAO.findAll();
+        List<StudentOutGoingDto> studentOutGoingDtoList = studentDtoMapper.map(studentList);
+
+//        List<StudentOutGoingDto> studentOutGoingDtoList = studentService.findAll();
+
+        for (StudentOutGoingDto s : studentOutGoingDtoList) {
+            System.out.println(s);
+        }
+
+
+        System.out.println();
+        System.out.println("------------------Add Student------------------");
+        StudentIncomingDto studentIncomingDto = new StudentIncomingDto("Василий Петров");
+        StudentOutGoingDto studentOutGoingDto = studentService.save(studentIncomingDto);
+        System.out.println(studentOutGoingDto);
+
+
+
+
+
+
+
+
+//        List<CourseOutGoingDto> courseDto = courseService.findAll();
+
+//        for (CourseOutGoingDto c : courseDto) {
+//            System.out.println(c);
+//        }
+
 
 //        DBInit.initDB();
 //        StudentsDAO studentsDAO = StudentsDAO.getInstance();

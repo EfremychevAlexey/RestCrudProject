@@ -1,23 +1,22 @@
 package org.example.repositoryDAO.impl;
 
-import org.example.db.DBConnectionManager;
-import org.example.db.DBConnectionManagerImpl;
+import org.example.db.ConnectionManager;
+import org.example.db.ConnectionManagerImpl;
 import org.example.exception.RepositoryException;
-import org.example.model.Course;
 import org.example.model.Teacher;
 import org.example.repositoryDAO.CourseDAO;
-import org.example.repositoryDAO.CoursesTeachersDAO;
-import org.example.repositoryDAO.DAO;
+import org.example.repositoryDAO.CourseTeacherDAO;
+import org.example.repositoryDAO.TeacherDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TeachersDAOImpl implements DAO<Teacher, Long> {
-    private static TeachersDAOImpl instance;
-    private final DBConnectionManager dbConnectionManager= DBConnectionManagerImpl.getInstance();
-    private final CoursesTeachersDAO coursesTeachersDAO = CoursesTeachersDAOImpl.getInstance();
+public class TeacherDAOImpl implements TeacherDAO {
+    private static TeacherDAO instance;
+    private final ConnectionManager dbConnectionManager= ConnectionManagerImpl.getInstance();
+    private final CourseTeacherDAO coursesTeachersDAO = CourseTeacherDAOImpl.getInstance();
     private final CourseDAO courseDAO = CourseDAOImpl.getInstance();
 
     static final String SAVE_SQL = "INSERT INTO school.teachers(teacher_name) " +
@@ -29,12 +28,12 @@ public class TeachersDAOImpl implements DAO<Teacher, Long> {
     static final String EXIST_BY_ID_SQL = "SELECT exists (SELECT 1 FROM school.teachers WHERE id = ? LIMIT 1)";
 
 
-    private TeachersDAOImpl() {
+    private TeacherDAOImpl() {
     }
 
-    public static synchronized TeachersDAOImpl getInstance() {
+    public static synchronized TeacherDAO getInstance() {
         if (instance == null) {
-            instance = new TeachersDAOImpl();
+            instance = new TeacherDAOImpl();
         }
         return instance;
     }
@@ -49,7 +48,7 @@ public class TeachersDAOImpl implements DAO<Teacher, Long> {
     @Override
     public Teacher save(Teacher teacher) {
         try (Connection connection = dbConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, teacher.getName());
             preparedStatement.executeUpdate();

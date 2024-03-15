@@ -4,11 +4,10 @@ import org.example.model.Course;
 import org.example.model.CourseTeacher;
 import org.example.model.Teacher;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public interface CoursesTeachersDAO extends DAO<CourseTeacher, Long>{
+public interface CourseTeacherDAO extends DAO<CourseTeacher, Long>{
     boolean deleteByCourseId(Long courseId);
 
     boolean deleteByTeacherId(Long teacherId);

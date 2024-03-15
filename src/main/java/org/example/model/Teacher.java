@@ -1,11 +1,9 @@
 package org.example.model;
 
-import org.example.repositoryDAO.CoursesTeachersDAO;
-import org.example.repositoryDAO.impl.CoursesTeachersDAOImpl;
+import org.example.repositoryDAO.CourseTeacherDAO;
+import org.example.repositoryDAO.impl.CourseTeacherDAOImpl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Teacher entity
@@ -15,7 +13,7 @@ import java.util.Objects;
  */
 
 public class Teacher {
-    private static final CoursesTeachersDAO coursesTeachersDAO = CoursesTeachersDAOImpl.getInstance();
+    private static final CourseTeacherDAO coursesTeachersDAO = CourseTeacherDAOImpl.getInstance();
     private Long id;
     private String name;
     private List<Course> courseList;
