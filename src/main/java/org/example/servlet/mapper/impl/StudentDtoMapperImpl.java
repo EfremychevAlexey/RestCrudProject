@@ -1,5 +1,6 @@
 package org.example.servlet.mapper.impl;
 
+import org.example.model.Course;
 import org.example.model.Student;
 import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.impl.CourseDAOImpl;
@@ -75,7 +76,7 @@ public class StudentDtoMapperImpl implements StudentDtoMapper {
         return new Student(
                 studentUpdateDto.getId(),
                 studentUpdateDto.getName(),
-                courseDao.findByName(studentUpdateDto.getCourseName()).orElse(null)
+                courseDtoMapper.map(studentUpdateDto.getCourse())
         );
     }
 }

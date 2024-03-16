@@ -15,4 +15,11 @@ public class StudentIncomingDto {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "StudentIncomingDto{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

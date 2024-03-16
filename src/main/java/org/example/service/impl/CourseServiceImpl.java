@@ -12,6 +12,7 @@ import org.example.servlet.mapper.CourseDtoMapper;
 import org.example.servlet.mapper.impl.CourseDtoMapperImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CourseServiceImpl implements CourseService {
     private static CourseService instance;
@@ -49,8 +50,15 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public CourseOutGoingDto save(CourseIncomingDto courseIncomingDto) {
-        Course course = courseDao.save(courseDtoMapper.map(courseIncomingDto));
-        return courseDtoMapper.map(courseDao.findById(course.getId()).orElse(course));
+        Course course;
+        Optional<Course> optionalCourse = courseDao.findByName(courseIncomingDto.getName());
+
+        if (optionalCourse.isPresent()) {
+            return courseDtoMapper.map(optionalCourse.get());
+        } else {
+            course = courseDao.save(courseDtoMapper.map(courseIncomingDto));
+            return courseDtoMapper.map(courseDao.findById(course.getId()).orElse(course));
+        }
     }
 
     /**

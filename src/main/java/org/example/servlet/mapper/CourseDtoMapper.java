@@ -14,9 +14,11 @@ public interface CourseDtoMapper {
 
     Course map(CourseUpdateDto courseUpdateDto);
 
-    CourseSmallOutGoingDto mapSmallCourse(Optional<Course> optionalCourse);
+    List<CourseSmallOutGoingDto> mapSmallCourseList(List<Course> courseList);
 
     CourseOutGoingDto map(Course course);
+
+    CourseSmallOutGoingDto mapSmallCourse(Optional<Course> optionalCourse);
 
     List<CourseOutGoingDto> map(List<Course> courseList);
 

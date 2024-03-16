@@ -74,14 +74,16 @@ public class StudentDAOImpl implements StudentDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
 
             preparedStatement.setString(1, student.getName());
+
             if (student.getCourse() == null) {
                 preparedStatement.setNull(2, Types.NULL);
             } else {
                 preparedStatement.setLong(2, student.getCourse().getId());
             }
-            preparedStatement.setLong(3, student.getCourse().getId());
+            preparedStatement.setLong(3, student.getId());
 
             preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

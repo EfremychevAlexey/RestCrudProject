@@ -1,17 +1,21 @@
 package org.example.servlet.mapper.impl;
 
 import org.example.model.Course;
+import org.example.repositoryDAO.CourseDAO;
+import org.example.repositoryDAO.impl.CourseDAOImpl;
 import org.example.servlet.dto.*;
 import org.example.servlet.mapper.CourseDtoMapper;
 import org.example.servlet.mapper.StudentDtoMapper;
 import org.example.servlet.mapper.TeacherDtoMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class CourseDtoMapperImpl implements CourseDtoMapper {
     private static final TeacherDtoMapper teacherDtoMapper = TeacherDtoMapperImpl.getInstance();
     private static final StudentDtoMapper studentDtoMapper = StudentDtoMapperImpl.getInstance();
+    private static final CourseDAO courseDAO = CourseDAOImpl.getInstance();
 
     private static CourseDtoMapper instance;
 
@@ -48,6 +52,9 @@ public class CourseDtoMapperImpl implements CourseDtoMapper {
 
     @Override
     public Course map(CourseUpdateDto courseUpdateDto) {
+        if (courseUpdateDto == null) {
+            return null;
+        }
         return new Course(
                 courseUpdateDto.getId(),
                 courseUpdateDto.getName(),
@@ -57,12 +64,16 @@ public class CourseDtoMapperImpl implements CourseDtoMapper {
     }
 
     @Override
+    public List<CourseSmallOutGoingDto> mapSmallCourseList(List<Course> courseList) {
+        return courseList.stream().map(course -> mapSmallCourse(Optional.ofNullable(course))).toList();
+    }
+
+
+    @Override
     public CourseSmallOutGoingDto mapSmallCourse(Optional<Course> optionalCourse) {
         CourseSmallOutGoingDto courseSmallOutGoingDto = null;
-        Course course = null;
-
         if (optionalCourse.isPresent()) {
-            course = optionalCourse.get();
+            Course course = optionalCourse.get();
             return new CourseSmallOutGoingDto(
                     course.getId(),
                     course.getName()
@@ -70,6 +81,7 @@ public class CourseDtoMapperImpl implements CourseDtoMapper {
         } else {
             return courseSmallOutGoingDto;
         }
+
     }
 
     @Override

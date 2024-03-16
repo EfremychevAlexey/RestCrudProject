@@ -2,7 +2,9 @@ package org.example.service.impl;
 
 import org.example.exception.NotFoundException;
 import org.example.model.Student;
+import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.StudentDAO;
+import org.example.repositoryDAO.impl.CourseDAOImpl;
 import org.example.repositoryDAO.impl.StudentDAOImpl;
 import org.example.service.StudentService;
 import org.example.servlet.dto.StudentIncomingDto;
@@ -36,7 +38,7 @@ public class StudentServiceImpl implements StudentService {
      */
     private void checkExistStudent(Long studentId) throws NotFoundException {
         if (!studentDAO.existById(studentId)) {
-            throw new NotFoundException("Course not found.");
+            throw new NotFoundException("Student not found.");
         }
     }
 

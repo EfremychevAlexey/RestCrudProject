@@ -5,14 +5,15 @@ import java.util.List;
 public class TeacherUpdateDto {
     private Long id;
     private String name;
-    private List<CourseUpdateDto> courseUpdateDtoList;
+    private CourseUpdateDto course;
 
     public TeacherUpdateDto() {
     }
 
-    public TeacherUpdateDto(Long id, String name) {
+    public TeacherUpdateDto(Long id, String name, CourseUpdateDto course) {
         this.id = id;
         this.name = name;
+        this.course = course;
     }
 
     public Long getId() {
@@ -23,7 +24,7 @@ public class TeacherUpdateDto {
         return name;
     }
 
-    public List<CourseUpdateDto> getCourseUpdateDtoList() {
-        return courseUpdateDtoList;
+    public CourseUpdateDto getCourse() {
+        return course;
     }
 }

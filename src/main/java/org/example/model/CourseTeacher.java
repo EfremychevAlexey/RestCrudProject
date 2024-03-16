@@ -5,14 +5,14 @@ package org.example.model;
  * Course <-> Teacher
  */
 public class CourseTeacher {
-    private long id;
-    private long courseId;
-    private long teacherId;
+    private Long id;
+    private Long courseId;
+    private Long teacherId;
 
     public CourseTeacher() {
     }
 
-    public CourseTeacher(long id, long courseId, long teacherId) {
+    public CourseTeacher(Long id, Long courseId, Long teacherId) {
         this.id = id;
         this.courseId = courseId;
         this.teacherId = teacherId;

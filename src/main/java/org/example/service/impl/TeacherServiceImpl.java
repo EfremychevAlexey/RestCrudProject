@@ -1,8 +1,13 @@
 package org.example.service.impl;
 
 import org.example.exception.NotFoundException;
+import org.example.model.CourseTeacher;
 import org.example.model.Teacher;
+import org.example.repositoryDAO.CourseDAO;
+import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.repositoryDAO.TeacherDAO;
+import org.example.repositoryDAO.impl.CourseDAOImpl;
+import org.example.repositoryDAO.impl.CourseTeacherDAOImpl;
 import org.example.repositoryDAO.impl.TeacherDAOImpl;
 import org.example.service.TeacherService;
 import org.example.servlet.dto.TeacherIncomingDto;
@@ -16,6 +21,8 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
     private static TeacherService instance;
     private static final TeacherDAO teacherDao = TeacherDAOImpl.getInstance();
+    private static  final CourseTeacherDAO courseTeacherDAO = CourseTeacherDAOImpl.getInstance();
+    private static final CourseDAO courseDAO = CourseDAOImpl.getInstance();
     private static final TeacherDtoMapper teacherDtoMapper = TeacherDtoMapperImpl.getInstance();
     
     private TeacherServiceImpl() {
@@ -62,8 +69,15 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void update(TeacherUpdateDto teacherDto) throws NotFoundException {
         checkTeacherExist(teacherDto.getId());
-        Teacher teacher = teacherDtoMapper.map(teacherDto);
-        teacherDao.update(teacher);
+        if (teacherDto.getCourse() != null) {
+            CourseTeacher courseTeacher = new CourseTeacher(
+                    null,
+                    teacherDto.getCourse().getId(),
+                    teacherDto.getId()
+            );
+            courseTeacherDAO.save(courseTeacher);
+        }
+        teacherDao.update(teacherDtoMapper.map(teacherDto));
     }
 
     /**
@@ -101,6 +115,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public boolean delete(Long teacherId) throws NotFoundException {
         checkTeacherExist(teacherId);
+        courseTeacherDAO.deleteByTeacherId(teacherId);
         return teacherDao.deleteById(teacherId);
     }
 }

@@ -21,4 +21,12 @@ public class CourseUpdateDto {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "CourseUpdateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

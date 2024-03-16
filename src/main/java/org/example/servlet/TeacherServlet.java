@@ -7,10 +7,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.exception.NotFoundException;
-import org.example.service.CourseService;
-import org.example.service.StudentService;
+import org.example.model.Teacher;
+import org.example.service.TeacherService;
 import org.example.service.impl.CourseServiceImpl;
-import org.example.service.impl.StudentServiceImpl;
+import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.*;
 
 import java.io.BufferedReader;
@@ -19,12 +19,12 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = {"/student/*"})
-public class StudentServlet extends HttpServlet {
-    private final transient StudentService studentService = StudentServiceImpl.getInstance();
+@WebServlet(urlPatterns = {"/teacher/*"})
+public class TeacherServlet extends HttpServlet {
+    private final transient TeacherService teacherService = TeacherServiceImpl.getInstance();
     private final ObjectMapper objectMapper;
 
-    public StudentServlet() {
+    public TeacherServlet() {
         this.objectMapper = new ObjectMapper();
     }
 
@@ -53,15 +53,15 @@ public class StudentServlet extends HttpServlet {
             String[] pathPart = req.getPathInfo().split("/");
 
             if ("all".equals(pathPart[1])) {
-                List<StudentOutGoingDto> studentDto = studentService.findAll();
+                List<TeacherOutGoingDto> teacherDto = teacherService.findAll();
                 resp.setStatus(HttpServletResponse.SC_OK);
-                responseAnswer = objectMapper.writeValueAsString(studentDto);
+                responseAnswer = objectMapper.writeValueAsString(teacherDto);
             }
             else {
-                Long courseId = Long.parseLong(pathPart[1]);
-                StudentOutGoingDto studentDto = studentService.findById(courseId);
+                Long teacherId = Long.parseLong(pathPart[1]);
+                TeacherOutGoingDto teacherDto = teacherService.findById(teacherId);
                 resp.setStatus(HttpServletResponse.SC_OK);
-                responseAnswer = objectMapper.writeValueAsString(studentDto);
+                responseAnswer = objectMapper.writeValueAsString(teacherDto);
             }
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -82,9 +82,9 @@ public class StudentServlet extends HttpServlet {
 
         try {
             String[] pathPart = req.getPathInfo().split("/");
-            Long studentId = Long.parseLong(pathPart[1]);
+            Long teacherId = Long.parseLong(pathPart[1]);
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            studentService.delete(studentId);
+            teacherService.delete(teacherId);
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             throw new RuntimeException();
@@ -103,11 +103,11 @@ public class StudentServlet extends HttpServlet {
         String json = getJson(req);
 
         String responseAnswer = null;
-        Optional<StudentIncomingDto> studentResponse;
+        Optional<TeacherIncomingDto> teacherResponse;
         try {
-            studentResponse = Optional.ofNullable(objectMapper.readValue(json, StudentIncomingDto.class));
-            StudentIncomingDto student = studentResponse.orElseThrow(IllegalArgumentException::new);
-            responseAnswer = objectMapper.writeValueAsString(studentService.save(student));
+            teacherResponse = Optional.ofNullable(objectMapper.readValue(json, TeacherIncomingDto.class));
+            TeacherIncomingDto teacher = teacherResponse.orElseThrow(IllegalArgumentException::new);
+            responseAnswer = objectMapper.writeValueAsString(teacherService.save(teacher));
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             responseAnswer = "Incorrect user Object.";
@@ -123,17 +123,17 @@ public class StudentServlet extends HttpServlet {
         String json = getJson(req);
 
         String responseAnswer = "";
-        Optional<StudentUpdateDto> studentResponse;
+        Optional<TeacherUpdateDto> teacherResponse;
         try {
-            studentResponse = Optional.ofNullable(objectMapper.readValue(json, StudentUpdateDto.class));
-            StudentUpdateDto studentUpdateDto = studentResponse.orElseThrow(IllegalArgumentException::new);
-            studentService.update(studentUpdateDto);
+            teacherResponse = Optional.ofNullable(objectMapper.readValue(json, TeacherUpdateDto.class));
+            TeacherUpdateDto teacherUpdateDto = teacherResponse.orElseThrow(IllegalArgumentException::new);
+            teacherService.update(teacherUpdateDto);
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             responseAnswer = e.getMessage();
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseAnswer = "Incorrect student Object.";
+            responseAnswer = "Incorrect course Object.";
         }
         PrintWriter printWriter = resp.getWriter();
         printWriter.write(responseAnswer);

@@ -53,7 +53,6 @@ public class CourseDAOImpl implements CourseDAO {
     public Course save(Course course) {
         try (Connection connection = dbConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-
             preparedStatement.setString(1, course.getName());
             preparedStatement.executeUpdate();
 

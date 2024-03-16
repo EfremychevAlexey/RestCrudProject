@@ -1,6 +1,8 @@
 package org.example.servlet.mapper.impl;
 
 import org.example.model.Teacher;
+import org.example.repositoryDAO.CourseDAO;
+import org.example.repositoryDAO.impl.CourseDAOImpl;
 import org.example.servlet.dto.TeacherIncomingDto;
 import org.example.servlet.dto.TeacherOutGoingDto;
 import org.example.servlet.dto.TeacherSmallOutGoingDto;
@@ -9,6 +11,7 @@ import org.example.servlet.mapper.CourseDtoMapper;
 import org.example.servlet.mapper.TeacherDtoMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TeacherDtoMapperImpl implements TeacherDtoMapper{
 
@@ -38,7 +41,7 @@ public class TeacherDtoMapperImpl implements TeacherDtoMapper{
         return new TeacherOutGoingDto(
                 teacher.getId(),
                 teacher.getName(),
-                courseDtoMapping.map(teacher.getCourses())
+                courseDtoMapping.mapSmallCourseList(teacher.getCourses())
         );
     }
 
@@ -55,7 +58,7 @@ public class TeacherDtoMapperImpl implements TeacherDtoMapper{
         return new Teacher(
                 teacherUpdateDto.getId(),
                 teacherUpdateDto.getName(),
-                courseDtoMapping.mapUpdateList(teacherUpdateDto.getCourseUpdateDtoList())
+                null
         );
     }
 

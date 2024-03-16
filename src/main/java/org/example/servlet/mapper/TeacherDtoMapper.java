@@ -1,10 +1,8 @@
 package org.example.servlet.mapper;
 
+import org.example.model.Student;
 import org.example.model.Teacher;
-import org.example.servlet.dto.TeacherIncomingDto;
-import org.example.servlet.dto.TeacherOutGoingDto;
-import org.example.servlet.dto.TeacherSmallOutGoingDto;
-import org.example.servlet.dto.TeacherUpdateDto;
+import org.example.servlet.dto.*;
 
 import java.util.List;
 

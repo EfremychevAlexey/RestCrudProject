@@ -7,12 +7,12 @@ import java.util.List;
 public class TeacherOutGoingDto {
     private Long id;
     private String name;
-    private List<CourseOutGoingDto> courseList;
+    private List<CourseSmallOutGoingDto> courseList;
 
     public TeacherOutGoingDto() {
     }
 
-    public TeacherOutGoingDto(Long id, String name, List<CourseOutGoingDto> courseList) {
+    public TeacherOutGoingDto(Long id, String name, List<CourseSmallOutGoingDto> courseList) {
         this.id = id;
         this.name = name;
         this.courseList = courseList;
@@ -34,11 +34,11 @@ public class TeacherOutGoingDto {
         this.name = name;
     }
 
-    public List<CourseOutGoingDto> getCourseList() {
+    public List<CourseSmallOutGoingDto> getCourseList() {
         return courseList;
     }
 
-    public void setCourseList(List<CourseOutGoingDto> courseList) {
+    public void setCourseList(List<CourseSmallOutGoingDto> courseList) {
         this.courseList = courseList;
     }
 }

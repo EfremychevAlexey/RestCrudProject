@@ -3,15 +3,15 @@ package org.example.servlet.dto;
 public class StudentUpdateDto {
     private Long id;
     private String name;
-    private String courseName;
+    private CourseUpdateDto course;
 
     public StudentUpdateDto() {
     }
 
-    public StudentUpdateDto(Long id, String name, String courseName) {
+    public StudentUpdateDto(Long id, String name, CourseUpdateDto course) {
         this.id = id;
         this.name = name;
-        this.courseName = courseName;
+        this.course = course;
     }
 
     public Long getId() {
@@ -22,7 +22,16 @@ public class StudentUpdateDto {
         return name;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public CourseUpdateDto getCourse() {
+        return course;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentUpdateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", course=" + course +
+                '}';
     }
 }
