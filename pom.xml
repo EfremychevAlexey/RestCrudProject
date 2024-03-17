@@ -6,7 +6,10 @@
 
     <groupId>org.example.restCrudProject</groupId>
     <artifactId>RestCrudProject</artifactId>
+    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
+    <name>User war project</name>
+    <url>http://localhost:8080</url>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -15,13 +18,6 @@
     </properties>
 
     <dependencies>
-
-<!--        <dependency>-->
-<!--            <groupId>org.postgresql</groupId>-->
-<!--            <artifactId>postgresql</artifactId>-->
-<!--            <version>42.2.5</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -87,7 +83,18 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

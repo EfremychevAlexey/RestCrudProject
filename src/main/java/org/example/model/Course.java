@@ -8,7 +8,8 @@ import org.example.repositoryDAO.impl.StudentDAOImpl;
 import java.util.List;
 
 /**
- * The department where the user works and the student studies
+ * Course entity
+ * Курс на котором преподают учителя и учится студенты
  * Relation:
  * One To Many: Course <- Student
  * Many To Many: Course <-> Teacher

@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ *
+ */
 public final class ConnectionManagerImpl implements ConnectionManager {
     private static final String DRIVER_CLASS_KEY = "db.driver-class-name";
     private static final String URL_KEY = "db.url";
@@ -21,6 +24,10 @@ public final class ConnectionManagerImpl implements ConnectionManager {
     private ConnectionManagerImpl() {
     }
 
+    /**
+     *
+     * @return
+     */
     public static synchronized ConnectionManager getInstance() {
         if (instance == null) {
             instance = new ConnectionManagerImpl();
@@ -29,6 +36,10 @@ public final class ConnectionManagerImpl implements ConnectionManager {
         return instance;
     }
 
+    /**
+     *
+     * @param driverClass
+     */
     private static void loadDriver(String driverClass) {
         try {
             Class.forName(driverClass);
@@ -37,6 +48,11 @@ public final class ConnectionManagerImpl implements ConnectionManager {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
@@ -45,52 +61,5 @@ public final class ConnectionManagerImpl implements ConnectionManager {
                 PropertiesUtil.getProperties(PASSWORD_KEY)
         );
     }
-
 }
 
-
-//public final class ConnectionManagerImpl implements ConnectionManager {
-//    private static ConnectionManagerImpl instance;
-//
-//    private ConnectionManagerImpl() {
-//    }
-//
-//    public static synchronized ConnectionManagerImpl getInstance() {
-//        if (instance == null) {
-//            instance = new ConnectionManagerImpl();
-//        }
-//        return instance;
-//    }
-//
-//    public Connection getConnection() throws SQLException {
-//        String dbURL;
-//        String dbUserName;
-//        String dbPassword;
-//
-//        FileInputStream fis;
-//        Properties properties = new Properties();
-//
-//        try {
-//            fis = new FileInputStream("/home/efremychev_a/IdeaProjects/RestCrudProject/src/main/resources/config.properties");
-//            properties.load(fis);
-//
-//            dbURL = properties.getProperty("db.host");
-//            dbUserName = properties.getProperty("db.username");
-//            dbPassword = properties.getProperty("db.password");
-//
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        Connection connection = null;
-//
-//        try {
-//            connection = DriverManager.getConnection(dbURL, dbUserName,dbPassword);
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//        return connection;
-//    }
-//}

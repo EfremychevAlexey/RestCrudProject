@@ -13,7 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс описывающий взаимодействие Course entity с базой даннных
+ */
 public class CourseDAOImpl implements CourseDAO {
+    private static CourseDAOImpl instance;
+    private final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
+    private static final StudentDAO studentDao = StudentDAOImpl.getInstance();
+    private static final CourseTeacherDAO courseTeacherDAO = CourseTeacherDAOImpl.getInstance();
+
     static final String SAVE_SQL = "INSERT INTO school.courses(course_name) VALUES(?)";
     static final String UPDATE_SQL = "UPDATE school.courses SET course_name = ? WHERE id = ?";
     static final String DELETE_SQL = "DELETE FROM school.courses WHERE id = ?";
@@ -22,11 +30,6 @@ public class CourseDAOImpl implements CourseDAO {
     static final String FIND_ALL_SQL = "SELECT id, course_name FROM school.courses";
     static final String EXIST_BY_ID_SQL = "SELECT exists (SELECT 1 FROM school.courses WHERE id = ? LIMIT 1)";
 
-
-    private static CourseDAOImpl instance;
-    private final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
-    private static final StudentDAO studentDao = StudentDAOImpl.getInstance();
-    private static final CourseTeacherDAO courseTeacherDAO = CourseTeacherDAOImpl.getInstance();
     private CourseDAOImpl() {
     }
 
@@ -44,8 +47,6 @@ public class CourseDAOImpl implements CourseDAO {
                 resultSet.getString("course_name"),
                 null,
                 null);
-//        course.getStudents();
-//        course.getTeachers();
         return course;
     }
 
@@ -175,6 +176,4 @@ public class CourseDAOImpl implements CourseDAO {
         }
         return isExists;
     }
-
-
 }

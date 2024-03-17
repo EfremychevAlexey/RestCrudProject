@@ -1,6 +1,7 @@
 package org.example.model;
 
 /**
+ * Таблица связей Course - Teacher
  * ManyToMany
  * Course <-> Teacher
  */
