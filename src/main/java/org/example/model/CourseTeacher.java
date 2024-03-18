@@ -19,11 +19,11 @@ public class CourseTeacher {
         this.teacherId = teacherId;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public long getCourseId() {
+    public Long getCourseId() {
         return courseId;
     }
 
@@ -31,7 +31,7 @@ public class CourseTeacher {
         this.courseId = courseId;
     }
 
-    public long getTeacherId() {
+    public Long getTeacherId() {
         return teacherId;
     }
 

@@ -9,10 +9,7 @@ import org.example.model.Teacher;
 import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.repositoryDAO.TeacherDAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +23,7 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
     static final String SAVE_SQL = "INSERT INTO school.courses_teachers(course_id, teacher_id) VALUES(?, ?)";
     static final String UPDATE_SQL = "UPDATE school.courses_teachers " +
             "SET course_id = ?, teacher_id = ? WHERE id = ?";
-    static final String DELETE_SQL = "DELETE FROM school.courses_teachers " +
-            "course_id = ? AND teacher_id = ?";
+    static final String DELETE_SQL = "DELETE FROM school.courses_teachers WHERE id = ?";
     static final String FIND_BY_ID_SQL = "SELECT id, course_id, teacher_id FROM school.courses_teachers " +
             "WHERE id = ? LIMIT 1";
     static final String FIND_ALL_SQL = "SELECT id, course_id, teacher_id FROM school.courses_teachers";
@@ -39,8 +35,7 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
             "FROM school.courses_teachers WHERE course_id = ? AND teacher_id = ? LIMIT 1";
     static final String DELETE_BY_COURSE_ID_SQL = "DELETE FROM school.courses_teachers WHERE course_id = ?";
     static final String DELETE_BY_TEACHER_ID_SQL = "DELETE FROM school.courses_teachers WHERE teacher_id = ?";
-    static final String EXIST_BY_ID_SQL = "SELECT exists (SELECT 1" +
-            "FROM school.courses_teachers WHERE id = ? LIMIT 1)";
+    static final String EXIST_BY_ID_SQL = "SELECT exists (SELECT 1 FROM school.courses_teachers WHERE id = ? LIMIT 1)";
 
     private CourseTeacherDAOImpl() {
     }
@@ -63,27 +58,26 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
     }
 
     @Override
-    public CourseTeacher save(CourseTeacher coursesTeachers) {
+    public CourseTeacher save(CourseTeacher courseTeacher) {
         try (Connection connection = dbConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-            preparedStatement.setLong(1, coursesTeachers.getCourseId());
-            preparedStatement.setLong(2, coursesTeachers.getTeacherId());
-
+            preparedStatement.setLong(1, courseTeacher.getCourseId());
+            preparedStatement.setLong(2, courseTeacher.getTeacherId());
             preparedStatement.executeUpdate();
 
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
-                coursesTeachers = new CourseTeacher(
+                courseTeacher = new CourseTeacher(
                         resultSet.getLong("id"),
-                        coursesTeachers.getCourseId(),
-                        coursesTeachers.getTeacherId()
+                        courseTeacher.getCourseId(),
+                        courseTeacher.getTeacherId()
                 );
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
-        return coursesTeachers;
+        return courseTeacher;
     }
 
     @Override
@@ -183,9 +177,8 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
     @Override
     public boolean existById(Long id) {
         boolean isExists = false;
-        try (Connection connection = dbConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID_SQL)) {
-
+        try(Connection connection = dbConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -193,10 +186,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
                 isExists = resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RepositoryException(e);
+            throw new RuntimeException(e);
         }
         return isExists;
     }
+
 
     @Override
     public List<CourseTeacher> findAllByCourseId(Long courseId) {

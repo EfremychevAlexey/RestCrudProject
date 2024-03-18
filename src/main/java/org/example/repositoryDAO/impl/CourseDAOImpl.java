@@ -58,7 +58,8 @@ public class CourseDAOImpl implements CourseDAO {
 
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
-                course = new Course(resultSet.getLong("id"),
+                course = new Course(
+                        resultSet.getLong("id"),
                         course.getName(),
                         null,
                         null
@@ -163,7 +164,6 @@ public class CourseDAOImpl implements CourseDAO {
         boolean isExists = false;
         try(Connection connection = dbConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID_SQL)) {
-
             preparedStatement.setLong(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();

@@ -6,8 +6,9 @@ import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import org.example.model.Course;
+import org.example.model.Teacher;
 import org.example.repositoryDAO.CourseDAO;
-import org.example.repositoryDAO.CourseTeacherDAO;
+import org.example.repositoryDAO.TeacherDAO;
 import org.example.util.PropertiesUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,8 +24,9 @@ import java.util.Optional;
 
 @Testcontainers
 @Tag("DockerRequired")
-class CourseDAOImplTest {
+class TeacherDAOImplTest {
     private static final String INIT_SQL = "sql/init.sql";
+    public static TeacherDAO teacherDAO;
     public static CourseDAO courseDAO;
     private static int containerPort = 5432;
     private static int localPort = 5432;
@@ -43,6 +45,7 @@ class CourseDAOImplTest {
     @BeforeAll
     static void beforeAll() {
         container.start();
+        teacherDAO = TeacherDAOImpl.getInstance();
         courseDAO = CourseDAOImpl.getInstance();
         jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container,"");
     }
@@ -59,54 +62,52 @@ class CourseDAOImplTest {
 
     @Test
     void save() {
-        String expectedName = "new Course";
-        Course course = new Course(
+        String expectedName = "new Teacher";
+        Teacher teacher = new Teacher(
                 null,
                 expectedName,
-                null,
-                null
+                List.of()
         );
-        course = courseDAO.save(course);
-        Optional<Course> resultCourse = courseDAO.findById(course.getId());
+        teacher = teacherDAO.save(teacher);
+        Optional<Teacher> resultTeacher = teacherDAO.findById(teacher.getId());
 
-        Assertions.assertTrue(resultCourse.isPresent());
-        Assertions.assertEquals(expectedName, resultCourse.get().getName());
+        Assertions.assertTrue(resultTeacher.isPresent());
+        Assertions.assertEquals(expectedName, resultTeacher.get().getName());
     }
+
 
     @Test
     void update() {
         String expectedName = "Update Course name";
 
-        Course course = courseDAO.findById(2L).get();
-        String oldName = course.getName();
-        int expectedSizeStudentList = course.getStudents().size();
-        int expectedSizeTeacherList = course.getTeachers().size();
-        course.setName(expectedName);
-        courseDAO.update(course);
+        Teacher teacher = teacherDAO.findById(2L).get();
+        String oldName = teacher.getName();
+        int expectedSizeCourseList = teacher.getCourses().size();
 
-        Course resultCourse = courseDAO.findById(2L).get();
-        int resultSizeStudentList = resultCourse.getStudents().size();
-        int resultSizeTeacherList = resultCourse.getTeachers().size();
+        teacher.setName(expectedName);
+        teacherDAO.update(teacher);
+
+        Teacher resultTeacher = teacherDAO.findById(2L).get();
+        int resultSizeCourseList = resultTeacher.getCourses().size();
 
         Assertions.assertNotEquals(expectedName, oldName);
-        Assertions.assertEquals(expectedName, resultCourse.getName());
-        Assertions.assertEquals(expectedSizeStudentList, resultSizeStudentList);
-        Assertions.assertEquals(expectedSizeTeacherList, resultSizeTeacherList);
+        Assertions.assertEquals(expectedName, resultTeacher.getName());
+        Assertions.assertEquals(expectedSizeCourseList, resultSizeCourseList);
     }
 
     @Test
     void deleteById() {
         Boolean expectedValue = true;
-        int expectedSize = courseDAO.findAll().size();
+        int expectedSize = teacherDAO.findAll().size();
 
-        Course tempCourse = new Course(null, "New course", List.of(), List.of());
-        tempCourse = courseDAO.save(tempCourse);
+        Teacher tempTeacher = new Teacher(null, "New teacher", List.of());
+        tempTeacher = teacherDAO.save(tempTeacher);
 
-        int resultSizeBefore = courseDAO.findAll().size();
+        int resultSizeBefore = teacherDAO.findAll().size();
         Assertions.assertNotEquals(expectedSize, resultSizeBefore);
 
-        boolean resultDelete = courseDAO.deleteById(tempCourse.getId());
-        int resultSizeAfter = courseDAO.findAll().size();
+        boolean resultDelete = teacherDAO.deleteById(tempTeacher.getId());
+        int resultSizeAfter = teacherDAO.findAll().size();
 
         Assertions.assertEquals(expectedValue, resultDelete);
         Assertions.assertEquals(expectedSize, resultSizeAfter);
@@ -116,43 +117,24 @@ class CourseDAOImplTest {
     @ParameterizedTest
     @CsvSource(value = {
             "1, true",
-            "4, true",
+            "3, true",
             "1000, false"
 
     })
     void findById(Long expectedId, Boolean expectedValue) {
-        Optional<Course> course = courseDAO.findById(expectedId);
+        Optional<Teacher> teacher = teacherDAO.findById(expectedId);
 
-        Assertions.assertEquals(expectedValue, course.isPresent());
+        Assertions.assertEquals(expectedValue, teacher.isPresent());
 
-        if (course.isPresent()) {
-            Assertions.assertEquals(expectedId, course.get().getId());
+        if (teacher.isPresent()) {
+            Assertions.assertEquals(expectedId, teacher.get().getId());
         }
     }
-
-    @DisplayName("Find by Name")
-    @ParameterizedTest
-    @CsvSource(value = {
-            "Java; true",
-            "PHP; true",
-            "Photo; false"
-
-    }, delimiter = ';')
-    void findByName(String expectedName, Boolean expectedValue) {
-        Optional<Course> course = courseDAO.findByName(expectedName);
-
-        Assertions.assertEquals(expectedValue, course.isPresent());
-
-        if (course.isPresent()) {
-            Assertions.assertEquals(expectedName, course.get().getName());
-        }
-    }
-
 
     @Test
     void findAll() {
-        int expectedSize = 5;
-        int resultSize = courseDAO.findAll().size();
+        int expectedSize = 3;
+        int resultSize = teacherDAO.findAll().size();
 
         Assertions.assertEquals(expectedSize, resultSize);
     }
@@ -161,13 +143,13 @@ class CourseDAOImplTest {
     @ParameterizedTest
     @CsvSource(value = {
             "1, true",
-            "4, true",
+            "3, true",
             "1000, false"
     })
     void existById(Long courseId, Boolean expectedValue) {
-        boolean isCourseExist = courseDAO.existById(courseId);
+        boolean isTeacherExist = teacherDAO.existById(courseId);
 
-        Assertions.assertEquals(expectedValue, isCourseExist);
+        Assertions.assertEquals(expectedValue, isTeacherExist);
     }
 
 
