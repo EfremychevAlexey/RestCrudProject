@@ -90,7 +90,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void updateByCourseId(Long courseId) {
+    public void deleteByCourseId(Long courseId) {
         try (Connection connection = dbConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BY_DELETE_COURSE_ID_SQL)) {
 

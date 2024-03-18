@@ -6,7 +6,6 @@ import org.example.model.Course;
 import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.repositoryDAO.StudentDAO;
-import org.example.repositoryDAO.TeacherDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class CourseDAOImpl implements CourseDAO {
 
             preparedStatement.setLong(1, id);
 
-            studentDao.updateByCourseId(id);
+            studentDao.deleteByCourseId(id);
             courseTeacherDAO.deleteByCourseId(id);
 
             deleteResult = preparedStatement.executeUpdate() > 0;
