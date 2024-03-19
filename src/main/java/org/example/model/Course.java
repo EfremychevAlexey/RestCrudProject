@@ -33,7 +33,7 @@ public class Course {
         this.teacherList = teacherList;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

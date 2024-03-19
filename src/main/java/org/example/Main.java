@@ -30,13 +30,6 @@ public class Main {
     public static void main(String[] args) throws SQLException, IOException, InterruptedException, NotFoundException {
 
         ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
-        CourseService courseService = CourseServiceImpl.getInstance();
-        StudentService studentService = StudentServiceImpl.getInstance();
         DBInit.init(connectionManager);
-        CourseDAO courseDAO = CourseDAOImpl.getInstance();
-        StudentDAO studentDAO = StudentDAOImpl.getInstance();
-        StudentDtoMapper studentDtoMapper = StudentDtoMapperImpl.getInstance();
-        CourseDtoMapper courseDtoMapper = CourseDtoMapperImpl.getInstance();
-
     }
 }

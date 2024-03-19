@@ -88,9 +88,4 @@ public class CourseDtoMapperImpl implements CourseDtoMapper {
     public List<CourseOutGoingDto> map(List<Course> courseList) {
         return courseList.stream().map(this::map).toList();
     }
-
-    @Override
-    public List<Course> mapUpdateList(List<CourseUpdateDto> courseList) {
-        return null;
-    }
 }
