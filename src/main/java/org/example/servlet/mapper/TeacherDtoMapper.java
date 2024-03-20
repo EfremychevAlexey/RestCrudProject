@@ -19,6 +19,4 @@ public interface TeacherDtoMapper {
     List<TeacherOutGoingDto> map(List<Teacher> teacherList);
 
     List<TeacherSmallOutGoingDto> mapSmallOutGoingList(List<Teacher> teacherList);
-
-    List<Teacher> mapUpdateList(List<TeacherUpdateDto> teacherList);
 }

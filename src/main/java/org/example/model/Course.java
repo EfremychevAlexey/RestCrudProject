@@ -66,15 +66,4 @@ public class Course {
     public void setTeachers(List<Teacher> teacherList) {
         this.teacherList = teacherList;
     }
-
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", studentList=" + studentList +
-                ", teacherList=" + teacherList +
-                '}';
-    }
 }

@@ -2,9 +2,7 @@ package org.example.service.impl;
 
 import org.example.exception.NotFoundException;
 import org.example.model.Student;
-import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.StudentDAO;
-import org.example.repositoryDAO.impl.CourseDAOImpl;
 import org.example.repositoryDAO.impl.StudentDAOImpl;
 import org.example.service.StudentService;
 import org.example.servlet.dto.StudentIncomingDto;
@@ -15,6 +13,9 @@ import org.example.servlet.mapper.impl.StudentDtoMapperImpl;
 
 import java.util.List;
 
+/**
+ * Совершает операции в таблице students
+ */
 public class StudentServiceImpl implements StudentService {
     private static StudentService instance;
     private static final StudentDAO studentDAO = StudentDAOImpl.getInstance();
@@ -23,6 +24,10 @@ public class StudentServiceImpl implements StudentService {
     private StudentServiceImpl() {
     }
 
+    /**
+     * Возвращает экземпляр класса
+     * @return
+     */
     public static synchronized StudentService getInstance() {
         if (instance == null) {
             instance = new StudentServiceImpl();
@@ -37,16 +42,16 @@ public class StudentServiceImpl implements StudentService {
      * @throws NotFoundException
      */
     private void checkExistStudent(Long studentId) throws NotFoundException {
-        if (!studentDAO.existById(studentId)) {
+        if (!studentDAO.existsById(studentId)) {
             throw new NotFoundException("Student not found.");
         }
     }
 
     /**
-     * @return
      * Преобразуем полученного StudentIncomingDto в модель Student
      * Сохраняем модель Student в бд, получаем модель Student с id
      * Преобразуем модель Student в StudentOutGoingDto и возвращаем её.
+     * @return
      * @param studentIncomingDto
      */
     @Override
@@ -62,7 +67,6 @@ public class StudentServiceImpl implements StudentService {
      * Обновляем запись в бд.
      * Если запись в таблице отсутствует, выбрасываем исключении с соответствующим сообщением
      * @param studentUpdateDto
-     * @throws NotFoundException
      */
     @Override
     public void update(StudentUpdateDto studentUpdateDto) throws NotFoundException {
@@ -106,10 +110,7 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     public void delete(Long studentId) throws NotFoundException {
-        if (studentDAO.existById(studentId)) {
-            studentDAO.deleteById(studentId);
-        } else {
-            throw  new NotFoundException("Student not found.");
-        }
+        checkExistStudent(studentId);
+        studentDAO.deleteById(studentId);
     }
 }

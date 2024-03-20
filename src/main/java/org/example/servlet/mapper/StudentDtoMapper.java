@@ -20,7 +20,5 @@ public interface StudentDtoMapper {
 
     List<StudentSmallOutGoingDto> mapSmallOutGoingList(List<Student> studentList);
 
-    List<Student> mapUpdateList(List<StudentUpdateDto> studentUpdateDtoList);
-
     Student map(StudentUpdateDto studentUpdateDto);
 }

@@ -1,5 +1,8 @@
 package org.example.servlet.dto;
 
+/**
+ * Класс для представления списка в использующих его других классах
+ */
 public class TeacherSmallOutGoingDto {
     private Long id;
     private String name;
@@ -18,13 +21,5 @@ public class TeacherSmallOutGoingDto {
 
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String toString() {
-        return "TeacherSmallOutGoingDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

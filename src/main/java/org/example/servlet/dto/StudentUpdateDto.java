@@ -1,5 +1,8 @@
 package org.example.servlet.dto;
 
+/**
+ * Класс представляющий данные для обновления записи в таблице бд
+ */
 public class StudentUpdateDto {
     private Long id;
     private String name;
@@ -24,14 +27,5 @@ public class StudentUpdateDto {
 
     public CourseUpdateDto getCourse() {
         return course;
-    }
-
-    @Override
-    public String toString() {
-        return "StudentUpdateDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", course=" + course +
-                '}';
     }
 }

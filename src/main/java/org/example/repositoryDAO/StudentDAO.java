@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface StudentDAO extends  DAO<Student, Long>{
 
-    void deleteByCourseId(Long courseId);
+    void deleteCourseIdByCourseId(Long courseId);
     List<Student> findAllByCourseId(Long courseId);
 }

@@ -2,6 +2,9 @@ package org.example.servlet.dto;
 
 import java.util.List;
 
+/**
+ * Класс DTO для выходящих данных
+ */
 public class CourseOutGoingDto {
     private Long id;
     private String name;

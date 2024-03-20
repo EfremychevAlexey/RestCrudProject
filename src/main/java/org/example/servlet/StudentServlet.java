@@ -43,8 +43,15 @@ public class StudentServlet extends HttpServlet {
         return sb.toString();
     }
 
+    /**
+     * Отрабатывает GET запрос
+     * Возвращает записи из бд в формате JSON
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setJsonHeader(resp);
 
         String responseAnswer = "";
@@ -75,8 +82,15 @@ public class StudentServlet extends HttpServlet {
         printWriter.flush();
     }
 
+    /**
+     * Отрабатывает DELETE запрос
+     * Возвращает статусы ответов SC_NOT_FOUND, SC_NO_CONTENT, SC_BAD_REQUEST
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setJsonHeader(resp);
         String responseAnswer = "";
 
@@ -87,7 +101,7 @@ public class StudentServlet extends HttpServlet {
             studentService.delete(studentId);
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            throw new RuntimeException();
+            responseAnswer = e.getMessage();
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             responseAnswer = "Bad request.";
@@ -97,6 +111,14 @@ public class StudentServlet extends HttpServlet {
         printWriter.flush();
     }
 
+    /**
+     * Отрабатывает Post запрос
+     * Возвращает экземпляр сохраненного в бд экземпляра в формате JSON
+     * Возвращает статусы ответов SC_OK, SC_BAD_REQUEST
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setJsonHeader(resp);
@@ -110,7 +132,7 @@ public class StudentServlet extends HttpServlet {
             responseAnswer = objectMapper.writeValueAsString(studentService.save(student));
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            responseAnswer = "Incorrect user Object.";
+            responseAnswer = "Incorrect student Object.";
         }
         PrintWriter printWriter = resp.getWriter();
         printWriter.write(responseAnswer);

@@ -2,6 +2,7 @@ package org.example.repositoryDAO.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
+import org.example.exception.RepositoryException;
 import org.example.model.Course;
 import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.CourseTeacherDAO;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * Класс описывающий взаимодействие Course entity с базой даннных
  */
 public class CourseDAOImpl implements CourseDAO {
-    private static CourseDAOImpl instance;
+    private static CourseDAO instance;
     private final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
     private static final StudentDAO studentDao = StudentDAOImpl.getInstance();
     private static final CourseTeacherDAO courseTeacherDAO = CourseTeacherDAOImpl.getInstance();
@@ -32,13 +33,23 @@ public class CourseDAOImpl implements CourseDAO {
     private CourseDAOImpl() {
     }
 
-    public static synchronized CourseDAOImpl getInstance() {
+    /**
+     * Возвращает экземпляр класса
+     * @return
+     */
+    public static synchronized CourseDAO getInstance() {
         if (instance == null) {
             instance = new CourseDAOImpl();
         }
         return instance;
     }
 
+    /**
+     * Создает новый экземпляр на основании ResultSet
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private static Course createCourse(ResultSet resultSet) throws SQLException {
         Course course;
         course = new Course(
@@ -49,6 +60,11 @@ public class CourseDAOImpl implements CourseDAO {
         return course;
     }
 
+    /**
+     * Сохраняет экземпляр Курся в бд, возвращает экземпляр с id
+     * @param course
+     * @return
+     */
     @Override
     public Course save(Course course) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -68,11 +84,15 @@ public class CourseDAOImpl implements CourseDAO {
                 course.getTeachers();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return course;
     }
 
+    /**
+     * Обновляет имя курсa по id
+     * @param course
+     */
     @Override
     public void update(Course course) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -83,10 +103,17 @@ public class CourseDAOImpl implements CourseDAO {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
     }
 
+    /**
+     * Удаляет запись из бд таблицы courses по id
+     * Удаляет запись из таблицы связей courses_teachers по id удаленного курса
+     * Обновляет в таблице students все записи с данным id меняя на null
+     * @param id
+     * @return
+     */
     @Override
     public boolean deleteById(Long id) {
         boolean deleteResult = true;
@@ -96,16 +123,21 @@ public class CourseDAOImpl implements CourseDAO {
 
             preparedStatement.setLong(1, id);
 
-            studentDao.deleteByCourseId(id);
+            studentDao.deleteCourseIdByCourseId(id);
             courseTeacherDAO.deleteByCourseId(id);
 
             deleteResult = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return deleteResult;
     }
 
+    /**
+     * Возвращает Optional<Course> из таблицы courses по id
+     * @param id
+     * @return
+     */
     @Override
     public Optional<Course> findById(Long id) {
         Course course = null;
@@ -119,11 +151,16 @@ public class CourseDAOImpl implements CourseDAO {
                 course = createCourse(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return Optional.ofNullable(course);
     }
 
+    /**
+     * Возвращает запись из таблицы courses по имени Курса
+     * @param name
+     * @return
+     */
     @Override
     public Optional<Course> findByName(String name) {
         Course course = null;
@@ -137,11 +174,15 @@ public class CourseDAOImpl implements CourseDAO {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return  Optional.ofNullable(course);
     }
 
+    /**
+     * Возвращает все записи из таблицы courses
+     * @return
+     */
     @Override
     public List<Course> findAll() {
         List<Course> courseList = new ArrayList<>();
@@ -154,13 +195,19 @@ public class CourseDAOImpl implements CourseDAO {
                 courseList.add(createCourse(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return courseList;
     }
 
+    /**
+     * Возвращает true если в таблице courses есть запись с переданным id
+     * и наоборот
+     * @param id
+     * @return
+     */
     @Override
-    public boolean existById(Long id) {
+    public boolean existsById(Long id) {
         boolean isExists = false;
         try(Connection connection = dbConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID_SQL)) {
@@ -171,7 +218,7 @@ public class CourseDAOImpl implements CourseDAO {
                 isExists = resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return isExists;
     }

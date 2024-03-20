@@ -1,5 +1,9 @@
 package org.example.servlet.dto;
 
+
+/**
+ * Класс DTO для входящих данных
+ */
 public class TeacherIncomingDto {
     private String name;
 

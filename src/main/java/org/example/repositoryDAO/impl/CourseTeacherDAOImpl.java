@@ -6,6 +6,7 @@ import org.example.exception.RepositoryException;
 import org.example.model.Course;
 import org.example.model.CourseTeacher;
 import org.example.model.Teacher;
+import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.repositoryDAO.TeacherDAO;
 
@@ -13,12 +14,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Класс описывает взаимодействие CourseTeacher entity с базой даннных
+ */
 public class CourseTeacherDAOImpl implements CourseTeacherDAO {
     private static final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
-    private static final CourseDAOImpl courseDAOImpl = CourseDAOImpl.getInstance();
+    private static final CourseDAO courseDao = CourseDAOImpl.getInstance();
     private static final TeacherDAO teacherDAO = TeacherDAOImpl.getInstance();
-    private static CourseTeacherDAOImpl instance = null;
+    private static CourseTeacherDAO instance = null;
 
     static final String SAVE_SQL = "INSERT INTO school.courses_teachers(course_id, teacher_id) VALUES(?, ?)";
     static final String UPDATE_SQL = "UPDATE school.courses_teachers " +
@@ -40,13 +43,23 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
     private CourseTeacherDAOImpl() {
     }
 
-    public static synchronized CourseTeacherDAOImpl getInstance() {
+    /**
+     * Возвращает экземпляр класса
+     * @return
+     */
+    public static synchronized CourseTeacherDAO getInstance() {
         if (instance == null) {
             instance = new CourseTeacherDAOImpl();
         }
         return instance;
     }
 
+    /**
+     * Создает экземпляр на основании полученного ResultSet
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private static CourseTeacher createCourseTeacher(ResultSet resultSet) throws SQLException {
         CourseTeacher courseTeacher;
         courseTeacher = new CourseTeacher(
@@ -57,6 +70,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return courseTeacher;
     }
 
+    /**
+     * Сохраняет запись в таблице связей запись на основании экземпляра класса
+     * @param courseTeacher
+     * @return
+     */
     @Override
     public CourseTeacher save(CourseTeacher courseTeacher) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -80,6 +98,10 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return courseTeacher;
     }
 
+    /**
+     * Обновляет запись по id в таблице связей на основинии перреданных данных
+     * @param coursesTeachers
+     */
     @Override
     public void update(CourseTeacher coursesTeachers) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -95,6 +117,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         }
     }
 
+    /**
+     * Удаляет запись из таблицы связей по переданному id
+     * @param id
+     * @return
+     */
     @Override
     public boolean deleteById(Long id) {
         boolean deleteResult;
@@ -110,6 +137,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return deleteResult;
     }
 
+    /**
+     * Удаляет все записи из таблицы связей по переданному id Курса
+     * @param courseId
+     * @return
+     */
     @Override
     public boolean deleteByCourseId(Long courseId) {
         boolean deleteResult;
@@ -125,6 +157,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return deleteResult;
     }
 
+    /**
+     * Удаляет все записи из таблицы связей по переданному id Учителя
+     * @param teacherId
+     * @return
+     */
     @Override
     public boolean deleteByTeacherId(Long teacherId) {
         boolean deleteResult;
@@ -140,6 +177,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return deleteResult;
     }
 
+    /**
+     * Получает запись из таблицы связей по переданному id
+     * @param id
+     * @return
+     */
     @Override
     public Optional<CourseTeacher> findById(Long id) {
         CourseTeacher courseTeacher = null;
@@ -158,6 +200,10 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return Optional.ofNullable(courseTeacher);
     }
 
+    /**
+     * Получает все записи из таблицы связей Course - Teacher
+     * @return
+     */
     @Override
     public List<CourseTeacher> findAll() {
         List<CourseTeacher> courseTeacherList = new ArrayList<>();
@@ -174,8 +220,13 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return courseTeacherList;
     }
 
+    /**
+     * Возвращает true если в таблице связей есть запись с передвнным id
+     * @param id
+     * @return
+     */
     @Override
-    public boolean existById(Long id) {
+    public boolean existsById(Long id) {
         boolean isExists = false;
         try(Connection connection = dbConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID_SQL)) {
@@ -186,12 +237,16 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
                 isExists = resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return isExists;
     }
 
-
+    /**
+     * Получает все записи из таблицы связей по переданному id Курса
+     * @param courseId
+     * @return
+     */
     @Override
     public List<CourseTeacher> findAllByCourseId(Long courseId) {
         List<CourseTeacher> courseTeacherList = new ArrayList<>();
@@ -209,6 +264,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return courseTeacherList;
     }
 
+    /**
+     * Получает все записи из таблицы связей по переданному id Учителя
+     * @param teacherId
+     * @return
+     */
     @Override
     public List<CourseTeacher> findAllByTeacherId(Long teacherId) {
         List<CourseTeacher> courseTeacherList = new ArrayList<>();
@@ -226,6 +286,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return courseTeacherList;
     }
 
+    /**
+     * Получает все Курсы из таблицы Курсы через таблицу связей по переданному id Учителя
+     * @param teacherId
+     * @return
+     */
     @Override
     public List<Course> findCoursesByTeacherId(Long teacherId) {
         List<Course> courseList = new ArrayList<>();
@@ -236,7 +301,7 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Long courseId = resultSet.getLong("course_id");
-                Optional<Course> optionalCourse = courseDAOImpl.findById(courseId);
+                Optional<Course> optionalCourse = courseDao.findById(courseId);
                 if (optionalCourse.isPresent()) {
                     courseList.add(optionalCourse.get());
                 }
@@ -247,6 +312,11 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return courseList;
     }
 
+    /**
+     * Получает все записи из таблицы teachers через таблицу связей по переданному id Курса
+     * @param courseId
+     * @return
+     */
     @Override
     public List<Teacher> findTeachersByCourseId(Long courseId) {
         List<Teacher> teacherList = new ArrayList<>();
@@ -268,6 +338,12 @@ public class CourseTeacherDAOImpl implements CourseTeacherDAO {
         return teacherList;
     }
 
+    /**
+     * Получает запись из таблицы связей по переданным id Курса и id Учителя
+     * @param courseId
+     * @param teacherId
+     * @return
+     */
     @Override
     public Optional<CourseTeacher> findByCourseIdAndTeacherId(Long courseId, Long teacherId) {
         Optional<CourseTeacher> courseTeacher = Optional.empty();

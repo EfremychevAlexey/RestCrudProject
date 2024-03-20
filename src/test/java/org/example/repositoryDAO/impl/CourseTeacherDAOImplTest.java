@@ -5,9 +5,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
-import org.example.model.Course;
 import org.example.model.CourseTeacher;
-import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.util.PropertiesUtil;
 import org.junit.jupiter.api.*;
@@ -19,7 +17,6 @@ import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
 import java.util.Optional;
 
 @Testcontainers
@@ -183,7 +180,7 @@ class CourseTeacherDAOImplTest {
             "1000, false"
     })
     void existById(Long courseTeacherId, Boolean expectedValue) {
-        Boolean isCourseTeacherExist = courseTeacherDAO.existById(courseTeacherId);
+        Boolean isCourseTeacherExist = courseTeacherDAO.existsById(courseTeacherId);
 
         Assertions.assertEquals(expectedValue, isCourseTeacherExist);
     }

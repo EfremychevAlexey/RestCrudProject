@@ -12,6 +12,9 @@ import org.example.util.InitSqlScheme;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * При GET запросе /db, создает схему school заполняет ее тестовыми данными
+ */
 @WebServlet(urlPatterns = {"/db"})
 public class DbServlet extends HttpServlet {
 

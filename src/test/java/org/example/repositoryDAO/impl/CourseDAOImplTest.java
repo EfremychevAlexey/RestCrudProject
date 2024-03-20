@@ -7,7 +7,6 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import org.example.model.Course;
 import org.example.repositoryDAO.CourseDAO;
-import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.util.PropertiesUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -97,19 +96,26 @@ class CourseDAOImplTest {
     @Test
     void deleteById() {
         Boolean expectedValue = true;
-        int expectedSize = courseDAO.findAll().size();
+        int expectedSize = 5;
+        int expectedStudentInTheCourseSize = 3;
+        int expectedTeachersInTheCourseSize = 1;
 
-        Course tempCourse = new Course(null, "New course", List.of(), List.of());
-        tempCourse = courseDAO.save(tempCourse);
+        Optional<Course> course = courseDAO.findById(1L);
+        if (course.isPresent()) {
+            int studentInTheCourseSize = course.get().getStudents().size();
+            int teacherInTheCourseSize = course.get().getTeachers().size();
+            Assertions.assertEquals(expectedStudentInTheCourseSize, studentInTheCourseSize);
+            Assertions.assertEquals(expectedTeachersInTheCourseSize, teacherInTheCourseSize);
 
-        int resultSizeBefore = courseDAO.findAll().size();
-        Assertions.assertNotEquals(expectedSize, resultSizeBefore);
+            int resultSizeBefore = courseDAO.findAll().size();
+            Assertions.assertEquals(expectedSize, resultSizeBefore);
 
-        boolean resultDelete = courseDAO.deleteById(tempCourse.getId());
-        int resultSizeAfter = courseDAO.findAll().size();
+            boolean resultDelete = courseDAO.deleteById(course.get().getId());
+            int resultSizeAfter = courseDAO.findAll().size();
 
-        Assertions.assertEquals(expectedValue, resultDelete);
-        Assertions.assertEquals(expectedSize, resultSizeAfter);
+            Assertions.assertEquals(expectedValue, resultDelete);
+            Assertions.assertEquals(expectedSize - 1, resultSizeAfter);
+        }
     }
 
     @DisplayName("Find by ID")
@@ -165,40 +171,8 @@ class CourseDAOImplTest {
             "1000, false"
     })
     void existById(Long courseId, Boolean expectedValue) {
-        boolean isCourseExist = courseDAO.existById(courseId);
+        boolean isCourseExist = courseDAO.existsById(courseId);
 
         Assertions.assertEquals(expectedValue, isCourseExist);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

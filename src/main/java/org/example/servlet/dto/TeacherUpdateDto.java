@@ -1,7 +1,8 @@
 package org.example.servlet.dto;
 
-import java.util.List;
-
+/**
+ * Класс представляющий данные для обновления записи в таблице бд
+ */
 public class TeacherUpdateDto {
     private Long id;
     private String name;

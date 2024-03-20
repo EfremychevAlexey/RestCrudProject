@@ -15,7 +15,7 @@ public interface StudentService {
 
     StudentOutGoingDto findById(Long studentId) throws NotFoundException;
 
-    List<StudentOutGoingDto> findAll();
+    List<StudentOutGoingDto> findAll() throws NotFoundException;
 
     void delete(Long userId) throws NotFoundException;
 }

@@ -14,6 +14,9 @@ import org.example.servlet.mapper.impl.CourseDtoMapperImpl;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Совершает операции в таблице courses
+ */
 public class CourseServiceImpl implements CourseService {
     private static CourseService instance;
     private static final CourseDAO courseDao = CourseDAOImpl.getInstance();
@@ -22,6 +25,10 @@ public class CourseServiceImpl implements CourseService {
     private CourseServiceImpl(){
     }
 
+    /**
+     * Возвращает экземпляр класса
+     * @return
+     */
     public static synchronized CourseService getInstance() {
         if (instance == null) {
             instance = new CourseServiceImpl();
@@ -36,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
      * @throws NotFoundException
      */
     private void checkExistCourse(Long courseId) throws NotFoundException {
-        if (!courseDao.existById(courseId)) {
+        if (!courseDao.existsById(courseId)) {
             throw new NotFoundException("Course not found.");
         }
     }

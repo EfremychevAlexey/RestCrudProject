@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- *
+ * Класс для соединения с бд
  */
 public final class ConnectionManagerImpl implements ConnectionManager {
     private static final String DRIVER_CLASS_KEY = "db.driver-class-name";
@@ -25,7 +25,7 @@ public final class ConnectionManagerImpl implements ConnectionManager {
     }
 
     /**
-     *
+     * Возвращает экземпляр класса
      * @return
      */
     public static synchronized ConnectionManager getInstance() {
@@ -37,7 +37,7 @@ public final class ConnectionManagerImpl implements ConnectionManager {
     }
 
     /**
-     *
+     * Загрузка драйвера подключения
      * @param driverClass
      */
     private static void loadDriver(String driverClass) {
@@ -49,7 +49,7 @@ public final class ConnectionManagerImpl implements ConnectionManager {
     }
 
     /**
-     *
+     * Возвращает connection
      * @return
      * @throws SQLException
      */

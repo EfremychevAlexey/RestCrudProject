@@ -1,5 +1,8 @@
 package org.example.servlet.dto;
 
+/**
+ * Класс DTO для выходящих данных
+ */
 public class StudentOutGoingDto {
     private Long id;
     private String name;
@@ -24,14 +27,5 @@ public class StudentOutGoingDto {
 
     public CourseSmallOutGoingDto getCourse() {
         return course;
-    }
-
-    @Override
-    public String toString() {
-        return "StudentOutGoingDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", course=" + course +
-                '}';
     }
 }

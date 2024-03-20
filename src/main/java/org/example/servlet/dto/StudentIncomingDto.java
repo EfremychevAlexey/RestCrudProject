@@ -1,7 +1,8 @@
 package org.example.servlet.dto;
 
-import org.example.model.Course;
-
+/**
+ * Класс DTO для входящих данных
+ */
 public class StudentIncomingDto {
     private String name;
 
@@ -14,12 +15,5 @@ public class StudentIncomingDto {
 
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String toString() {
-        return "StudentIncomingDto{" +
-                "name='" + name + '\'' +
-                '}';
     }
 }

@@ -3,10 +3,8 @@ package org.example.service.impl;
 import org.example.exception.NotFoundException;
 import org.example.model.CourseTeacher;
 import org.example.model.Teacher;
-import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.repositoryDAO.TeacherDAO;
-import org.example.repositoryDAO.impl.CourseDAOImpl;
 import org.example.repositoryDAO.impl.CourseTeacherDAOImpl;
 import org.example.repositoryDAO.impl.TeacherDAOImpl;
 import org.example.service.TeacherService;
@@ -17,12 +15,12 @@ import org.example.servlet.mapper.TeacherDtoMapper;
 import org.example.servlet.mapper.impl.TeacherDtoMapperImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TeacherServiceImpl implements TeacherService {
     private static TeacherService instance;
     private static final TeacherDAO teacherDao = TeacherDAOImpl.getInstance();
     private static  final CourseTeacherDAO courseTeacherDAO = CourseTeacherDAOImpl.getInstance();
-    private static final CourseDAO courseDAO = CourseDAOImpl.getInstance();
     private static final TeacherDtoMapper teacherDtoMapper = TeacherDtoMapperImpl.getInstance();
     
     private TeacherServiceImpl() {
@@ -42,7 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @throws NotFoundException
      */
     private void checkTeacherExist(Long teacherId) throws NotFoundException {
-        if (!teacherDao.existById(teacherId)) {
+        if (!teacherDao.existsById(teacherId)) {
             throw new NotFoundException("Teacher not found.");
         }
     }
@@ -70,12 +68,21 @@ public class TeacherServiceImpl implements TeacherService {
     public void update(TeacherUpdateDto teacherDto) throws NotFoundException {
         checkTeacherExist(teacherDto.getId());
         if (teacherDto.getCourse() != null) {
-            CourseTeacher courseTeacher = new CourseTeacher(
-                    null,
-                    teacherDto.getCourse().getId(),
-                    teacherDto.getId()
-            );
-            courseTeacherDAO.save(courseTeacher);
+            if (teacherDto.getCourse().getName().equals("delete")) {
+                Optional<CourseTeacher> courseTeacher = courseTeacherDAO.findByCourseIdAndTeacherId(
+                        teacherDto.getCourse().getId(),
+                        teacherDto.getId()
+                );
+                courseTeacher.ifPresent(ct -> courseTeacherDAO.deleteById(ct.getId()));
+
+            } else {
+                CourseTeacher courseTeacher = new CourseTeacher(
+                        null,
+                        teacherDto.getCourse().getId(),
+                        teacherDto.getId()
+                );
+                courseTeacherDAO.save(courseTeacher);
+            }
         }
         teacherDao.update(teacherDtoMapper.map(teacherDto));
     }

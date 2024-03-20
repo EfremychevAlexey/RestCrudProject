@@ -120,18 +120,14 @@ class StudentDAOImplTest {
         Course expectedCourse = null;
         // Студент из базы
         Student student = studentDAO.findById(1L).get();
-        //Его курс
         Course course = student.getCourse();
         Long courseID = course.getId();
-        // Проверяем, что курс не null
+
         Assertions.assertNotEquals(expectedCourse, course);
-        // Обновляем курс у студента
-        student.setCourse(expectedCourse);
-        //Обновляем студента по id курсв
-        studentDAO.deleteByCourseId(courseID);
-        //Получаем студента из базы
+
+        studentDAO.deleteCourseIdByCourseId(courseID);
+
         Student studentUpdated = studentDAO.findById(1L).get();
-        // Получаем его курс
         Course studentUpdatedGetCourse = studentUpdated.getCourse();
         Assertions.assertEquals(expectedCourse, studentUpdatedGetCourse);
     }
@@ -189,7 +185,7 @@ class StudentDAOImplTest {
             "1000, false"
     })
     void existById(Long studentId, Boolean expectedValue) {
-        boolean isStudentExist = studentDAO.existById(studentId);
+        boolean isStudentExist = studentDAO.existsById(studentId);
         Assertions.assertEquals(expectedValue, isStudentExist);
     }
 

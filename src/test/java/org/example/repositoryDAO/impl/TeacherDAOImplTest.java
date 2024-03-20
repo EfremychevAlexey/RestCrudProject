@@ -5,7 +5,6 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
-import org.example.model.Course;
 import org.example.model.Teacher;
 import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.TeacherDAO;
@@ -147,7 +146,7 @@ class TeacherDAOImplTest {
             "1000, false"
     })
     void existById(Long courseId, Boolean expectedValue) {
-        boolean isTeacherExist = teacherDAO.existById(courseId);
+        boolean isTeacherExist = teacherDAO.existsById(courseId);
 
         Assertions.assertEquals(expectedValue, isTeacherExist);
     }

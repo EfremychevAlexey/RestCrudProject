@@ -14,5 +14,5 @@ public interface DAO<Entity, Key> {
 
     List<Entity> findAll();
 
-    boolean existById(Key id);
+    boolean existsById(Key id);
 }

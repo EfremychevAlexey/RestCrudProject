@@ -1,9 +1,6 @@
 package org.example.servlet.mapper.impl;
 
-import org.example.model.Course;
 import org.example.model.Student;
-import org.example.repositoryDAO.CourseDAO;
-import org.example.repositoryDAO.impl.CourseDAOImpl;
 import org.example.servlet.dto.StudentIncomingDto;
 import org.example.servlet.dto.StudentOutGoingDto;
 import org.example.servlet.dto.StudentSmallOutGoingDto;
@@ -14,10 +11,12 @@ import org.example.servlet.mapper.StudentDtoMapper;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс представляющий методы для преобразования DTO объектов
+ */
 public class StudentDtoMapperImpl implements StudentDtoMapper {
     private static StudentDtoMapper instance;
     private static final CourseDtoMapper courseDtoMapper = CourseDtoMapperImpl.getInstance();
-    private static final CourseDAO courseDao = CourseDAOImpl.getInstance();
 
     private StudentDtoMapperImpl() {
     }
@@ -55,7 +54,6 @@ public class StudentDtoMapperImpl implements StudentDtoMapper {
         );
     }
 
-
     @Override
     public List<StudentOutGoingDto> map(List<Student> studentList) {
         return studentList.stream().map(this::map).toList();
@@ -64,11 +62,6 @@ public class StudentDtoMapperImpl implements StudentDtoMapper {
     @Override
     public List<StudentSmallOutGoingDto> mapSmallOutGoingList(List<Student> studentList) {
         return studentList.stream().map(this::mapSmallOutGoing).toList();
-    }
-
-    @Override
-    public List<Student> mapUpdateList(List<StudentUpdateDto> studentUpdateDtoList) {
-        return null;
     }
 
     @Override

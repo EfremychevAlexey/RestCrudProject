@@ -1,9 +1,10 @@
 package org.example.servlet.dto;
 
-import org.example.model.Course;
-
 import java.util.List;
 
+/**
+ * Класс DTO для выходящих данных
+ */
 public class TeacherOutGoingDto {
     private Long id;
     private String name;

@@ -4,7 +4,6 @@ import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
 import org.example.exception.RepositoryException;
 import org.example.model.Teacher;
-import org.example.repositoryDAO.CourseDAO;
 import org.example.repositoryDAO.CourseTeacherDAO;
 import org.example.repositoryDAO.TeacherDAO;
 
@@ -13,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс описывает взаимодействие модели Teacher с бд
+ */
 public class TeacherDAOImpl implements TeacherDAO {
     private static TeacherDAO instance;
     private final ConnectionManager dbConnectionManager= ConnectionManagerImpl.getInstance();
     private final CourseTeacherDAO coursesTeachersDAO = CourseTeacherDAOImpl.getInstance();
-    private final CourseDAO courseDAO = CourseDAOImpl.getInstance();
 
     static final String SAVE_SQL = "INSERT INTO school.teachers(teacher_name) " +
             "VALUES(?)";
@@ -31,6 +32,10 @@ public class TeacherDAOImpl implements TeacherDAO {
     private TeacherDAOImpl() {
     }
 
+    /**
+     * Возвращает экземпляр класса
+     * @return
+     */
     public static synchronized TeacherDAO getInstance() {
         if (instance == null) {
             instance = new TeacherDAOImpl();
@@ -38,6 +43,12 @@ public class TeacherDAOImpl implements TeacherDAO {
         return instance;
     }
 
+    /**
+     * создает экземпляр класса на основании переданного ResultSet
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private Teacher createTeacher(ResultSet resultSet) throws SQLException {
         Long teacherId = resultSet.getLong("id");
         String teacherName = resultSet.getString("teacher_name");
@@ -45,6 +56,11 @@ public class TeacherDAOImpl implements TeacherDAO {
         return new Teacher(teacherId, teacherName, null);
     }
 
+    /**
+     * Сохдает запись в таблице teachers на основании полученного экземпляра
+     * @param teacher
+     * @return
+     */
     @Override
     public Teacher save(Teacher teacher) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -68,6 +84,10 @@ public class TeacherDAOImpl implements TeacherDAO {
         return teacher;
     }
 
+    /**
+     * одновляет запись в таблице teachers на основании полученного экзкмпляра
+     * @param teacher
+     */
     @Override
     public void update(Teacher teacher) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -83,6 +103,11 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
     }
 
+    /**
+     * Удаляет запись из таблицы teachers по полученному id
+     * @param id
+     * @return
+     */
     @Override
     public boolean deleteById(Long id) {
         boolean deleteResult;
@@ -99,6 +124,12 @@ public class TeacherDAOImpl implements TeacherDAO {
         return deleteResult;
     }
 
+    /**
+     * Получает запись из teachers по id
+     * Возвращает Optional<Teacher>
+     * @param id
+     * @return
+     */
     @Override
     public Optional<Teacher> findById(Long id) {
         Teacher teacher = null;
@@ -112,11 +143,16 @@ public class TeacherDAOImpl implements TeacherDAO {
                 teacher = createTeacher(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return Optional.ofNullable(teacher);
     }
 
+    /**
+     * Получает все записи из таблицы teachers
+     * Возвращает список экземпляров класса
+     * @return
+     */
     @Override
     public List<Teacher> findAll() {
         List<Teacher> teacherList = new ArrayList<>();
@@ -133,8 +169,14 @@ public class TeacherDAOImpl implements TeacherDAO {
         return teacherList;
     }
 
+    /**
+     * Возвращает true если в таблице teachers есть запись с полученным id
+     * и false если такой нет
+     * @param id
+     * @return
+     */
     @Override
-    public boolean existById(Long id) {
+    public boolean existsById(Long id) {
         boolean isExists = false;
         try (Connection connection = dbConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID_SQL)) {

@@ -13,8 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс описывает взаимодействие  модели Student с базой данных
+ */
 public class StudentDAOImpl implements StudentDAO {
-    private static StudentDAOImpl instance = null;
+    private static StudentDAO instance = null;
     private final ConnectionManager dbConnectionManager = ConnectionManagerImpl.getInstance();
     private final CourseDAO courseDAO = CourseDAOImpl.getInstance();
 
@@ -31,13 +34,23 @@ public class StudentDAOImpl implements StudentDAO {
     private StudentDAOImpl() {
     }
 
-    public static synchronized StudentDAOImpl getInstance() {
+    /**
+     * Возвращает экземпляр класса
+     * @return
+     */
+    public static synchronized StudentDAO getInstance() {
         if (instance == null) {
             instance = new StudentDAOImpl();
         }
         return instance;
     }
 
+    /**
+     * Создает экземпляр класса на основании полученного ResultSet
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private Student createStudent(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
         String studentName = resultSet.getString("student_name");
@@ -46,6 +59,11 @@ public class StudentDAOImpl implements StudentDAO {
         return new Student(id, studentName, course);
     }
 
+    /**
+     * Создает запись в таблице students на основании переданного экземпляра
+     * @param student
+     * @return
+     */
     @Override
     public Student save(Student student) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -68,6 +86,10 @@ public class StudentDAOImpl implements StudentDAO {
         return student;
     }
 
+    /**
+     * Обновляет запись в таблице students, name и course_id(если не null)
+     * @param student
+     */
     @Override
     public void update(Student student) {
         try (Connection connection = dbConnectionManager.getConnection();
@@ -89,8 +111,13 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
+    /**
+     * Удаляет courseId во всех записях в таблице students по переданному coursId
+     * записывает в ячейку null
+     * @param courseId
+     */
     @Override
-    public void deleteByCourseId(Long courseId) {
+    public void deleteCourseIdByCourseId(Long courseId) {
         try (Connection connection = dbConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BY_DELETE_COURSE_ID_SQL)) {
 
@@ -101,6 +128,11 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
+    /**
+     * Удаляет запись по id
+     * @param id
+     * @return
+     */
     @Override
     public boolean deleteById(Long id) {
         boolean deleteResult;
@@ -115,6 +147,12 @@ public class StudentDAOImpl implements StudentDAO {
         return deleteResult;
     }
 
+    /**
+     * Получает запись по id
+     * возвращает Optional<Student>
+     * @param id
+     * @return
+     */
     @Override
     public Optional<Student> findById(Long id) {
         Student student = null;
@@ -128,11 +166,16 @@ public class StudentDAOImpl implements StudentDAO {
                 student = createStudent(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return Optional.ofNullable(student);
     }
 
+    /**
+     * Получает все записи из таблицы student, возвращает список экземпляров класса
+     * Возвращает список экземпляров класса
+     * @return
+     */
     @Override
     public List<Student> findAll() {
         List<Student> studentList = new ArrayList<>();
@@ -144,13 +187,18 @@ public class StudentDAOImpl implements StudentDAO {
                 studentList.add(createStudent(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return studentList;
     }
 
+    /**
+     * Возвращает true если в таблице есть запись с переланным id и наоборот
+     * @param id
+     * @return
+     */
     @Override
-    public boolean existById(Long id) {
+    public boolean existsById(Long id) {
         boolean isExists = false;
         try (Connection connection = dbConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
@@ -162,11 +210,17 @@ public class StudentDAOImpl implements StudentDAO {
                 isExists = resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return isExists;
     }
 
+    /**
+     * Получает все записи из student по courseId
+     * Возвращает список экземпляров класса
+     * @param courseId
+     * @return
+     */
     @Override
     public List<Student> findAllByCourseId(Long courseId) {
         List<Student> studentList = new ArrayList<>();
@@ -179,7 +233,7 @@ public class StudentDAOImpl implements StudentDAO {
                 studentList.add(createStudent(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException(e);
         }
         return studentList;
     }
