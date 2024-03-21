@@ -132,7 +132,6 @@ class StudentDAOImplTest {
         Assertions.assertEquals(expectedCourse, studentUpdatedGetCourse);
     }
 
-
     @Test
     void deleteById() {
         Boolean expectedValue = true;
@@ -150,7 +149,6 @@ class StudentDAOImplTest {
         Assertions.assertEquals(expectedValue, resultDelete);
         Assertions.assertEquals(expectedSize, resultSizeAfter);
     }
-
 
     @DisplayName("Find by ID")
     @ParameterizedTest
@@ -196,36 +194,4 @@ class StudentDAOImplTest {
 
         Assertions.assertEquals(expectedSize, resultSize);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

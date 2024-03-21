@@ -1,15 +1,12 @@
 package org.example.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.exception.NotFoundException;
-import org.example.model.Teacher;
 import org.example.service.TeacherService;
-import org.example.service.impl.CourseServiceImpl;
 import org.example.service.impl.TeacherServiceImpl;
 import org.example.servlet.dto.*;
 
@@ -19,6 +16,9 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сервлет обрабатывает HTTP запросы /student/*
+ */
 @WebServlet(urlPatterns = {"/teacher/*"})
 public class TeacherServlet extends HttpServlet {
     private final transient TeacherService teacherService = TeacherServiceImpl.getInstance();
@@ -140,7 +140,7 @@ public class TeacherServlet extends HttpServlet {
     }
 
     /**
-     * Отрабатывает PUT запрос
+     * Отрабатывает запрос PUT, обновляет записи в бд
      * @param req
      * @param resp
      * @throws IOException

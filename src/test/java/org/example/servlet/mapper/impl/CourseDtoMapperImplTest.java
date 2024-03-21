@@ -44,6 +44,7 @@ class CourseDtoMapperImplTest {
                 "course2"
         );
         Course result = courseDtoMapper.map(dto);
+
         Assertions.assertEquals(dto.getId(), result.getId());
         Assertions.assertEquals(dto.getName(), result.getName());
     }
@@ -58,6 +59,7 @@ class CourseDtoMapperImplTest {
 
         Assertions.assertEquals(courseList.get(0).getId(), result.get(0).getId());
         Assertions.assertEquals(courseList.get(0).getName(), result.get(0).getName());
+
         Assertions.assertEquals(courseList.get(1).getId(), result.get(1).getId());
         Assertions.assertEquals(courseList.get(1).getName(), result.get(1).getName());
     }
@@ -105,10 +107,13 @@ class CourseDtoMapperImplTest {
 
         Assertions.assertEquals(courseList.get(0).getId(), resultList.get(0).getId());
         Assertions.assertEquals(courseList.get(0).getName(), resultList.get(0).getName());
+
         Assertions.assertEquals(courseList.get(1).getId(), resultList.get(1).getId());
         Assertions.assertEquals(courseList.get(1).getName(), resultList.get(1).getName());
+
         Assertions.assertEquals(courseList.get(0).getStudents().size(), resultList.get(0).getStudentList().size());
         Assertions.assertEquals(courseList.get(0).getTeachers().size(), resultList.get(0).getTeacherList().size());
+
         Assertions.assertEquals(courseList.get(1).getStudents().size(), resultList.get(1).getStudentList().size());
         Assertions.assertEquals(courseList.get(1).getTeachers().size(), resultList.get(1).getTeacherList().size());
     }

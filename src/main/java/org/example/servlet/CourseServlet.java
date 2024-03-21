@@ -141,6 +141,12 @@ public class CourseServlet extends HttpServlet {
         printWriter.flush();
     }
 
+    /**
+     * Отрабатывает запрос PUT, обновляет записи в бд
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setJsonHeader(resp);

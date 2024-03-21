@@ -74,7 +74,6 @@ class TeacherDAOImplTest {
         Assertions.assertEquals(expectedName, resultTeacher.get().getName());
     }
 
-
     @Test
     void update() {
         String expectedName = "Update Course name";
@@ -150,36 +149,4 @@ class TeacherDAOImplTest {
 
         Assertions.assertEquals(expectedValue, isTeacherExist);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

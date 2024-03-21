@@ -19,6 +19,9 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сервлет обрабатывает HTTP запросы /student/*
+ */
 @WebServlet(urlPatterns = {"/student/*"})
 public class StudentServlet extends HttpServlet {
     private final transient StudentService studentService = StudentServiceImpl.getInstance();
@@ -139,6 +142,12 @@ public class StudentServlet extends HttpServlet {
         printWriter.flush();
     }
 
+    /**
+     * Отрабатывает запрос PUT, обновляет записи в бд
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setJsonHeader(resp);

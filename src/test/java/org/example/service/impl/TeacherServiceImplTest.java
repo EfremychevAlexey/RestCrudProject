@@ -113,7 +113,7 @@ public class TeacherServiceImplTest {
 
         Assertions.assertEquals(expectedId, dto.getId());
     }
-//
+
     @Test
     void findByIdNotFound() {
         Optional<Teacher> user = Optional.empty();
@@ -148,6 +148,4 @@ public class TeacherServiceImplTest {
         Long result = argumentCaptor.getValue();
         Assertions.assertEquals(expectedId, result);
     }
-
-
 }
