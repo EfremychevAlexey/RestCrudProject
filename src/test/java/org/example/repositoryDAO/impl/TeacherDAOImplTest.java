@@ -28,10 +28,10 @@ class TeacherDAOImplTest {
     public static TeacherDAO teacherDAO;
     public static CourseDAO courseDAO;
     private static int containerPort = 5432;
-    private static int localPort = 5432;
+    private static int localPort = 5433;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withDatabaseName("mydb")
+            .withDatabaseName("postgres")
             .withUsername(PropertiesUtil.getProperties("db.username"))
             .withPassword(PropertiesUtil.getProperties("db.password"))
             .withExposedPorts(containerPort)

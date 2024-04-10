@@ -5,6 +5,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
+import lombok.extern.slf4j.Slf4j;
 import org.example.model.Course;
 import org.example.repositoryDAO.CourseDAO;
 import org.example.util.PropertiesUtil;
@@ -20,16 +21,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Testcontainers
 @Tag("DockerRequired")
 class CourseDAOImplTest {
     private static final String INIT_SQL = "sql/init.sql";
     public static CourseDAO courseDAO;
     private static int containerPort = 5432;
-    private static int localPort = 5432;
+    private static int localPort = 5433;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withDatabaseName("mydb")
+            .withDatabaseName("postgres")
             .withUsername(PropertiesUtil.getProperties("db.username"))
             .withPassword(PropertiesUtil.getProperties("db.password"))
             .withExposedPorts(containerPort)
@@ -58,6 +60,7 @@ class CourseDAOImplTest {
 
     @Test
     void save() {
+        log.info("begin.save()");
         String expectedName = "new Course";
         Course course = new Course(
                 null,

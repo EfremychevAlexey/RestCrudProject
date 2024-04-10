@@ -84,7 +84,7 @@ public class CourseDAOImpl implements CourseDAO {
                 course.getTeachers();
             }
         } catch (SQLException e) {
-            throw new RepositoryException(e);
+
         }
         return course;
     }

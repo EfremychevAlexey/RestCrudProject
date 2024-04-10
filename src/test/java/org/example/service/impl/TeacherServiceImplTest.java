@@ -73,7 +73,7 @@ public class TeacherServiceImplTest {
         CourseUpdateDto courseUpdateDto = new CourseUpdateDto(1L, "nameCourse");
         TeacherUpdateDto dto = new TeacherUpdateDto(expectedId, "name", courseUpdateDto);
 
-        Mockito.doReturn(true).when(mockTeacherDao).existsById(Mockito.any());
+        Mockito.doReturn(true).when(mockTeacherDao).existsById(Mockito.anyLong());
 
         teacherService.update(dto);
 
@@ -137,7 +137,7 @@ public class TeacherServiceImplTest {
 
     @Test
     void delete() throws NotFoundException {
-        Long expectedId = 100L;
+        Long expectedId = 1L;
 
         Mockito.doReturn(true).when(mockTeacherDao).existsById(Mockito.any());
         teacherService.delete(expectedId);

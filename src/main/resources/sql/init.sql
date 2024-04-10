@@ -86,17 +86,17 @@ INSERT INTO school.teachers (teacher_name) VALUES ('Демидов Дмитри�
 INSERT INTO school.teachers (teacher_name) VALUES ('Чайкина Ольга');
 INSERT INTO school.teachers (teacher_name) VALUES ('Дудин Виктор');
 
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('1', '1');
 INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('2', '1');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('3', '1');
 INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('4', '1');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('1', '2');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('2', '2');
 INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('3', '2');
-INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('5', '2');
+INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('4', '2');
 INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('1', '3');
-INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('2', '3');
-INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('3', '3');
-INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('4', '3');
-INSERT INTO school.courses_teachers (course_id, teacher_id) VALUES ('5', '3');
 
-INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Efremychev', '1');
-INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Shakshin', '1');
-INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Ilin', '1');
-INSERT INTO school.students (student_name, course_id) VALUES ('Maxim Efremychev', '2');
+INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Efremychev', '3');
+INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Shakshin', '3');
+INSERT INTO school.students (student_name, course_id) VALUES ('Alexey Ilin', '3');
+INSERT INTO school.students (student_name, course_id) VALUES ('Maxim Efremychev', '3');
